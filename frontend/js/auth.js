@@ -5,7 +5,7 @@ function getToken() {
 }
 
 function setSession(session) {
-    if (session ? .access_token) {
+    if (session && session.access_token) {
         localStorage.setItem("access_token", session.access_token);
         localStorage.setItem("refresh_token", session.refresh_token || "");
         localStorage.setItem("user", JSON.stringify(session.user || {}));
@@ -21,24 +21,31 @@ function clearSession() {
 function getUser() {
     try {
         return JSON.parse(localStorage.getItem("user") || "{}");
-    } catch {
+    } catch (e) {
         return {};
     }
 }
 
-async function api(path, options = {}) {
-    const headers = {
+async function api(path, options) {
+    options = options || {};
+    var headers = {
         "Content-Type": "application/json",
-        ...(options.headers || {}),
     };
-    const token = getToken();
-    if (token) headers["Authorization"] = `Bearer ${token}`;
+    if (options.headers) {
+        for (var k in options.headers) headers[k] = options.headers[k];
+    }
+    var token = getToken();
+    if (token) headers["Authorization"] = "Bearer " + token;
 
-    const res = await fetch(`${API}${path}`, {
-        ...options,
-        headers,
+    var res = await fetch(API + path, {
+        method: options.method || "GET",
+        headers: headers,
+        body: options.body,
     });
-    const data = await res.json().catch(() => ({}));
+    var data = {};
+    try {
+        data = await res.json();
+    } catch (e) {}
     if (!res.ok) {
         throw new Error(data.detail || data.message || "Request failed");
     }
@@ -46,18 +53,22 @@ async function api(path, options = {}) {
 }
 
 async function signIn(email, password) {
-    const data = await api("/auth/signin", {
+    var data = await api("/auth/signin", {
         method: "POST",
-        body: JSON.stringify({ email, password }),
+        body: JSON.stringify({ email: email, password: password }),
     });
     setSession(data.session);
     return data;
 }
 
 async function signUp(email, password, full_name) {
-    const data = await api("/auth/signup", {
+    var data = await api("/auth/signup", {
         method: "POST",
-        body: JSON.stringify({ email, password, full_name }),
+        body: JSON.stringify({
+            email: email,
+            password: password,
+            full_name: full_name,
+        }),
     });
     if (data.session) setSession(data.session);
     return data;
@@ -66,7 +77,7 @@ async function signUp(email, password, full_name) {
 async function signOut() {
     try {
         await api("/auth/signout", { method: "POST" });
-    } catch {}
+    } catch (e) {}
     clearSession();
     window.location.href = "login.html";
 }
@@ -80,13 +91,13 @@ function requireAuth() {
 }
 
 window.Auth = {
-    getToken,
-    getUser,
-    api,
-    signIn,
-    signUp,
-    signOut,
-    requireAuth,
-    clearSession,
-    setSession,
+    getToken: getToken,
+    getUser: getUser,
+    api: api,
+    signIn: signIn,
+    signUp: signUp,
+    signOut: signOut,
+    requireAuth: requireAuth,
+    clearSession: clearSession,
+    setSession: setSession,
 };
