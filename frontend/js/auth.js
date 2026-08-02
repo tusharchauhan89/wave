@@ -79,7 +79,6 @@ function requireAuth() {
     return true;
 }
 
-// Export for other modules
 window.Auth = {
     getToken,
     getUser,
