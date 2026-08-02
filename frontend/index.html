@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Groove – Music for everyone</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="css/style.css" />
+</head>
+
+<body>
+    <div class="app">
+        <aside class="sidebar">
+            <div class="logo">
+                <svg width="32" height="32" viewBox="0 0 24 24" fill="#1db954"><path d="M12 0C5.4 0 0 5.4 0 12s5.4 12 12 12 12-5.4 12-12S18.66 0 12 0zm5.521 17.34c-.24.359-.66.48-1.021.24-2.82-1.74-6.36-2.101-10.561-1.141-.418.122-.779-.179-.899-.539-.12-.421.18-.78.54-.9 4.56-1.021 8.52-.6 11.64 1.32.42.18.479.659.301 1.02zm1.44-3.3c-.301.42-.841.6-1.262.3-3.239-1.98-8.159-2.58-11.939-1.38-.479.12-1.02-.12-1.14-.6-.12-.48.12-1.021.6-1.141C9.6 9.9 15 10.561 18.72 12.84c.361.181.54.78.241 1.2zm.12-3.36C15.24 8.4 8.82 8.16 5.16 9.301c-.6.179-1.2-.181-1.38-.721-.18-.601.18-1.2.72-1.381 4.26-1.26 11.28-1.02 15.721 1.621.539.3.719 1.02.419 1.56-.299.421-1.02.599-1.559.3z"/></svg>
+                <span>Groove</span>
+            </div>
+
+            <nav class="nav-block">
+                <div class="nav-item" onclick="App.showHome()">
+                    <svg viewBox="0 0 24 24"><path d="M13.5 1.515a3 3 0 0 0-3 0L3 5.845a2 2 0 0 0-1 1.732V21a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1v-6h4v6a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1V7.577a2 2 0 0 0-1-1.732l-7.5-4.33z"/></svg>
+                    <span>Home</span>
+                </div>
+                <div class="nav-item" onclick="document.getElementById('search-input').focus()">
+                    <svg viewBox="0 0 24 24"><path d="M10.533 1.279c-5.18 0-9.407 4.14-9.407 9.279s4.226 9.279 9.407 9.279c2.234 0 4.29-.77 5.907-2.058l4.353 4.353a1 1 0 1 0 1.414-1.414l-4.344-4.344a9.157 9.157 0 0 0 2.077-5.816c0-5.14-4.226-9.28-9.407-9.28zm-7.407 9.279c0-4.006 3.302-7.28 7.407-7.28s7.407 3.274 7.407 7.28-3.302 7.279-7.407 7.279-7.407-3.273-7.407-7.28z"/></svg>
+                    <span>Search</span>
+                </div>
+                <div class="nav-item" onclick="App.showRecent()">
+                    <svg viewBox="0 0 24 24"><path d="M12 3.86A8.14 8.14 0 1 0 20.14 12 8.15 8.15 0 0 0 12 3.86zM12 20A8 8 0 1 1 20 12a8 8 0 0 1-8 8zm.5-12.75v4.54l3.75 2.25-.75 1.23L11 12.75V7.25z"/></svg>
+                    <span>Recent</span>
+                </div>
+                <div class="nav-item" onclick="App.showLiked()">
+                    <svg viewBox="0 0 24 24"><path d="M15.724 4.22A4.776 4.776 0 0 1 12.03 6.32a4.778 4.778 0 0 1 8.7-1.045.75.75 0 1 1-1.325.703 3.28 3.28 0 0 0-5.977.717.75.75 0 0 1-1.388-.055A4.78 4.78 0 0 1 15.724 4.22zM12.03 8.82a.75.75 0 0 1 .75.75v8.69l2.97-2.97a.75.75 0 1 1 1.06 1.06l-4.25 4.25a.75.75 0 0 1-1.06 0l-4.25-4.25a.75.75 0 1 1 1.06-1.06l2.97 2.97V9.57a.75.75 0 0 1 .75-.75z"/></svg>
+                    <span>Liked</span>
+                </div>
+                <div class="nav-item" onclick="App.showPlaylists()">
+                    <svg viewBox="0 0 24 24"><path d="M3 22a1 1 0 0 1-1-1V3a1 1 0 0 1 2 0v18a1 1 0 0 1-1 1zM15.5 2.134A1 1 0 0 0 14 3v18.466a1 1 0 0 0 1.5.866l8-4.464a1 1 0 0 0 0-1.732l-8-4.464a1 1 0 0 0-.5-.134zM15.5 7.5 20 10l-4.5 2.5v-5z"/></svg>
+                    <span>Playlists</span>
+                </div>
+            </nav>
+
+            <div class="nav-section">
+                <h3>Your Library</h3>
+                <div class="playlist-list" id="playlist-list">
+                    <div class="playlist-item" onclick="App.showRecent()">Recently Played</div>
+                    <div class="playlist-item" onclick="App.showLiked()">Liked Songs</div>
+                </div>
+            </div>
+        </aside>
+
+        <main class="main">
+            <div class="top-bar">
+                <div class="search-box">
+                    <svg viewBox="0 0 24 24"><path d="M10.533 1.279c-5.18 0-9.407 4.14-9.407 9.279s4.226 9.279 9.407 9.279c2.234 0 4.29-.77 5.907-2.058l4.353 4.353a1 1 0 1 0 1.414-1.414l-4.344-4.344a9.157 9.157 0 0 0 2.077-5.816c0-5.14-4.226-9.28-9.407-9.28zm-7.407 9.279c0-4.006 3.302-7.28 7.407-7.28s7.407 3.274 7.407 7.28-3.302 7.279-7.407 7.279-7.407-3.273-7.407-7.28z"/></svg>
+                    <input id="search-input" type="text" placeholder="What do you want to listen to?" autocomplete="off" />
+                </div>
+                <div class="user-area">
+                    <button class="mic-btn" id="mic-btn" title="Nova voice">🎤</button>
+                    <button class="user-btn" id="logout-btn" title="Logout">
+            <div class="avatar" id="user-avatar">U</div>
+            <span id="user-name">User</span>
+          </button>
+                </div>
+            </div>
+            <div id="main-content">
+                <div class="loading">Loading…</div>
+            </div>
+        </main>
+
+        <footer class="player-bar">
+            <div class="now-playing">
+                <img id="np-cover" src="" alt="" />
+                <div class="info">
+                    <h4 id="np-title">Not playing</h4>
+                    <p id="np-artist">—</p>
+                </div>
+            </div>
+
+            <div class="controls">
+                <div class="control-btns">
+                    <button id="btn-prev" title="Previous">⏮</button>
+                    <button class="play-pause" id="btn-play" title="Play">▶</button>
+                    <button id="btn-next" title="Next">⏭</button>
+                </div>
+                <div class="progress-row">
+                    <span id="current-time">0:00</span>
+                    <div class="progress-bar" id="progress-bar">
+                        <div class="filled" id="progress-filled"></div>
+                    </div>
+                    <span id="duration">0:00</span>
+                </div>
+            </div>
+
+            <div class="extra-controls">
+                <button id="btn-chat" class="icon-btn" title="Nova Chat">💬</button>
+                <button id="btn-lyrics" class="icon-btn" title="Lyrics">📝</button>
+                <button id="btn-queue" class="icon-btn" title="Queue">☰</button>
+                <div class="volume-row">
+                    <span>🔊</span>
+                    <input type="range" id="volume" min="0" max="100" value="70" />
+                </div>
+            </div>
+        </footer>
+    </div>
+
+    <div id="queue-panel" class="queue-panel">
+        <div class="queue-header">
+            <h3>Queue</h3>
+            <button id="queue-close">✕</button>
+        </div>
+        <div id="queue-list">
+            <p class="queue-empty">Queue empty</p>
+        </div>
+    </div>
+
+    <div id="lyrics-modal" class="lyrics-modal">
+        <div class="lyrics-card">
+            <div class="lyrics-header">
+                <h3 id="lyrics-title">Lyrics</h3>
+                <button id="lyrics-close">✕</button>
+            </div>
+            <pre id="lyrics-body" class="lyrics-body"></pre>
+        </div>
+    </div>
+
+    <div id="chat-panel" class="chat-panel">
+        <div class="chat-header">
+            <div>
+                <h3>Nova</h3>
+                <span id="chat-provider" class="chat-provider">AI companion</span>
+            </div>
+            <button id="chat-close">✕</button>
+        </div>
+        <div id="chat-messages" class="chat-messages"></div>
+        <div class="chat-quick">
+            <button type="button" onclick="Chat.quick('Who are you?')">Who are you?</button>
+            <button type="button" onclick="Chat.quick('Play something chill')">Chill</button>
+            <button type="button" onclick="Chat.quick('I am sad, recommend songs')">Sad mood</button>
+            <button type="button" onclick="Chat.quick('What can you do?')">Features</button>
+        </div>
+        <div class="chat-input-row">
+            <input id="chat-input" type="text" placeholder="Ask Nova…" autocomplete="off" />
+            <button id="chat-send" class="btn-green">Send</button>
+        </div>
+    </div>
+
+    <script src="js/auth.js"></script>
+    <script src="js/player.js"></script>
+    <script src="js/voice.js"></script>
+    <script src="js/chat.js"></script>
+    <script src="js/app.js"></script>
+</body>
+
+</html>
