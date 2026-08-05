@@ -1,0 +1,215 @@
+.topbar {
+    height: 80px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 24px;
+    padding: 0 30px;
+    background: #121212;
+    border-bottom: 1px solid #222;
+}
+
+
+/* ================= LEFT ================= */
+
+.topbar-left {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.circle-btn {
+    width: 42px;
+    height: 42px;
+    border: none;
+    border-radius: 50%;
+    background: #000;
+    color: white;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+    transition: .25s ease;
+}
+
+.circle-btn:hover {
+    background: #1DB954;
+}
+
+
+/* ================= SEARCH ================= */
+
+.search-container {
+    flex: 1;
+    max-width: 620px;
+    height: 48px;
+    background: #242424;
+    border-radius: 999px;
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    padding: 0 18px;
+    transition: .25s ease;
+}
+
+.search-container:focus-within {
+    border: 2px solid #1DB954;
+}
+
+.search-container svg {
+    color: #B3B3B3;
+}
+
+.search-container input {
+    flex: 1;
+    background: none;
+    border: none;
+    outline: none;
+    color: white;
+    font-size: 15px;
+}
+
+.search-container input::placeholder {
+    color: #B3B3B3;
+}
+
+
+/* ================= RIGHT ================= */
+
+.topbar-right {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+}
+
+
+/* Notification */
+
+.notification-btn {
+    width: 42px;
+    height: 42px;
+    border: none;
+    border-radius: 50%;
+    background: #000;
+    color: white;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+    position: relative;
+    transition: .25s ease;
+}
+
+.notification-btn:hover {
+    background: #1DB954;
+}
+
+.notification-dot {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    width: 8px;
+    height: 8px;
+    background: #1DB954;
+    border-radius: 50%;
+}
+
+
+/* Profile */
+
+.profile-btn {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    border: none;
+    background: #000;
+    color: white;
+    border-radius: 999px;
+    padding: 8px 16px;
+    cursor: pointer;
+    transition: .25s ease;
+}
+
+.profile-btn:hover {
+    background: #242424;
+}
+
+.profile-info {
+    display: flex;
+    align-items: center;
+}
+
+.profile-name {
+    font-size: 15px;
+    font-weight: 600;
+    color: white;
+    letter-spacing: .3px;
+}
+
+.profile-btn svg:last-child {
+    color: #B3B3B3;
+    transition: .25s;
+}
+
+.profile-btn:hover svg:last-child {
+    color: white;
+}
+
+.voice-btn {
+    background: transparent;
+    border: none;
+    color: #b3b3b3;
+    cursor: pointer;
+    padding: 6px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.2s ease;
+}
+
+.voice-btn:hover {
+    color: #fff;
+    background: #282828;
+}
+
+.voice-btn.listening {
+    color: #fff;
+    background: #1db954;
+    animation: pulse-mic 1s infinite;
+}
+
+@keyframes pulse-mic {
+    0% {
+        box-shadow: 0 0 0 0 rgba(29, 185, 84, 0.5);
+    }
+    70% {
+        box-shadow: 0 0 0 10px rgba(29, 185, 84, 0);
+    }
+    100% {
+        box-shadow: 0 0 0 0 rgba(29, 185, 84, 0);
+    }
+}
+
+.voice-status-toast {
+    position: fixed;
+    bottom: 100px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: #282828;
+    color: #fff;
+    padding: 10px 18px;
+    border-radius: 20px;
+    font-size: 13px;
+    z-index: 2000;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4);
+}
+
+.voice-status-toast.listen {
+    background: #1db954;
+    color: #000;
+}
+
+.voice-status-toast.error {
+    background: #e91429;
+}

@@ -11,6 +11,7 @@ async def search_music(
     limit: int = 50,
 ):
     try:
+        # prefer songs-focused search for more results
         data = await saavn.search_songs(query, page, limit)
         return {"success": True, "data": data, "page": page, "limit": limit}
     except Exception as e:
@@ -93,3 +94,22 @@ async def charts():
         return {"success": True, "data": data}
     except Exception as e:
         raise HTTPException(status_code=502, detail=str(e))
+@router.get("/search/artists")
+async def search_artists(
+    query: str = Query(..., min_length=1),
+    page: int = 0,
+    limit: int = 20,
+):
+    try:
+        data = await saavn.search_artists(query, page, limit)
+        return {
+            "success": True,
+            "data": data,
+            "page": page,
+            "limit": limit
+        }
+    except Exception as e:
+        raise HTTPException(
+            status_code=502,
+            detail=f"Artist search failed: {str(e)}"
+        )

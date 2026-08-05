@@ -1,0 +1,28 @@
+:root {
+
+  /* ===========================
+     COLORS
+  =========================== */
+
+  --background: #0B0F19;
+  --sidebar: #111827;
+  --card: #181F2F;
+  --surface: #20293A;
+
+  --primary: #1DB954;
+  --primary-hover: #1ed760;
+
+  --text: #F8FAFC;
+  --text-secondary: #94A3B8;
+
+  --border: rgba(255,255,255,.08);
+
+  /* ===========================
+     SPACING
+  =========================== */
+
+  --radius:16px;
+
+  --transition:.25s ease;
+
+}

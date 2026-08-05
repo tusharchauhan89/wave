@@ -13,39 +13,35 @@ from utils.supabase_client import supabase
 
 router = APIRouter()
 
-SYSTEM_PROMPT = """You are Nova, the AI music companion inside Groove — a Spotify-style music app.
+SYSTEM_PROMPT = """You are Nova, the AI music companion inside Groove — a modern music streaming app (like Spotify, powered by JioSaavn).
 
-Your personality:
-- Friendly, concise, a bit witty. Like a smart friend who lives for music.
-- You can speak casually in English or Hinglish if the user does.
+PERSONALITY:
+- Warm, concise, slightly witty. Talk like a cool music-obsessed friend.
+- Match the user's language: if they use Hinglish/Hindi, reply in Hinglish. Otherwise English.
+- Never be robotic or overly formal.
 
-What you know about Groove:
-- Search and play songs (JioSaavn catalog)
-- Like songs, playlists, recently played, queue
-- Album and artist pages
-- Voice commands with wake word "Nova" (e.g. "Nova play Kesariya")
-- Mood/language filters on Home (Romantic, Lofi, Party, Hindi, Punjabi, etc.)
-- Lyrics button when a song is playing
+WHAT YOU CAN DO:
+1. Play any song/artist → action: "play_search", query: "song or artist name"
+2. Recommend songs for mood/activity/weather → list 3-5 real popular songs + optionally play one
+3. Open liked songs → action: "play_liked"
+4. Show recently played → action: "show_recent"
+5. Go to home → action: "show_home"
+6. Search without playing → action: "search", query: "..."
 
-What you can do:
-- Recommend songs for mood, activity, weather, time of day
-- Explain app features
-- Suggest what to play next based on user's liked/recent songs (if provided)
-- When recommending specific tracks, prefer real popular song names
-
-Response format (IMPORTANT):
-Always reply with valid JSON only, no markdown fences:
+STRICT RESPONSE FORMAT (JSON only, no markdown, no extra text):
 {
-  "reply": "your message to the user",
-  "action": null or one of "play_search" | "search" | "play_liked" | "show_recent" | "show_home",
-  "query": "song or search query if action needs it, else null"
+  "reply": "short friendly message under 80 words",
+  "action": null | "play_search" | "search" | "play_liked" | "show_recent" | "show_home",
+  "query": "search query string if needed, else null"
 }
 
-Rules:
-- If user asks to play something, set action to "play_search" and query to the song/artist name.
-- If they only want ideas, action can be null and list 3–5 song ideas in reply.
-- Never invent private user data not in the context.
-- Keep reply under 120 words unless they ask for a long list.
+RULES:
+- When user says "play X" / "chalao X" / "gaana chalao" → always set action "play_search" and put the song/artist in query.
+- For pure recommendations (no play request) → action null, list 3-5 real song names in reply.
+- Prefer real popular Indian + international tracks that actually exist on JioSaavn.
+- Use the User context (liked + recently played) to personalize when available.
+- Never invent private data.
+- Keep reply short and natural.
 """
 
 
@@ -122,70 +118,59 @@ def build_user_context(user_id: Optional[str]) -> str:
 def rule_based_reply(message: str, context: str) -> Dict[str, Any]:
     t = message.lower().strip()
 
-    if re.search(r"\b(who are you|what are you|your name|introduce)\b", t):
-        return {
-            "reply": "I'm Nova — your music buddy inside Groove. I can recommend songs for any mood, explain features, and even play tracks. Try: “play something chill” or “what can you do?”",
-            "action": None,
-            "query": None,
-        }
-
-    if re.search(r"\b(what can you do|features|help|kaise use)\b", t):
-        return {
-            "reply": "I can: recommend songs by mood, play a track (“play Kesariya”), open liked/recent, and explain Groove (search, playlists, voice “Nova play …”, filters on Home). What mood are you in?",
-            "action": None,
-            "query": None,
-        }
-
-    if re.search(r"\b(liked|favourites|favorites)\b", t):
-        return {
-            "reply": "Opening your liked songs.",
-            "action": "play_liked",
-            "query": None,
-        }
-
-    if re.search(r"\b(recent|history)\b", t):
-        return {
-            "reply": "Here's your recently played.",
-            "action": "show_recent",
-            "query": None,
-        }
-
-    play = re.search(r"(?:play|chalao)\s+(.+)", t)
+    # Play intent (stronger)
+    play = re.search(r"(?:play|chalao|sunao|gaana chalao|put on)\s+(.+)", t, re.I)
     if play:
-        q = play.group(1).strip()
+        q = play.group(1).strip().rstrip(".!?")
         return {
-            "reply": f"Playing {q} for you.",
+            "reply": f"Playing {q} for you 🎵",
             "action": "play_search",
             "query": q,
         }
 
+    # Mood map (better queries)
     mood_map = [
-        (r"\b(sad|upset|heartbroken|dukhi|rona)\b", "sad emotional songs arijit"),
-        (r"\b(happy|party|celebrate|maza)\b", "party dance bollywood hits"),
-        (r"\b(chill|lofi|relax|study|sleep)\b", "lofi chill beats"),
-        (r"\b(gym|workout|energy|pump)\b", "workout gym motivation songs"),
-        (r"\b(romantic|love|crush|pyar)\b", "romantic bollywood songs"),
-        (r"\b(focus|concentrate|coding)\b", "instrumental focus lo-fi"),
-        (r"\b(devotional|bhajan|spiritual)\b", "devotional bhajan"),
-        (r"\b(rainy|barish|monsoon)\b", "rainy day hindi songs"),
+        (r"\b(sad|upset|heartbroken|dukhi|rona|breakup)\b", "sad emotional arijit singh"),
+        (r"\b(happy|party|celebrate|maza|dance)\b", "party bollywood dance hits"),
+        (r"\b(chill|lofi|relax|study|sleep|calm)\b", "lofi chill beats"),
+        (r"\b(gym|workout|energy|pump|motivation)\b", "gym workout motivation songs"),
+        (r"\b(romantic|love|crush|pyar|ishq)\b", "romantic bollywood songs"),
+        (r"\b(focus|concentrate|coding|study music)\b", "instrumental focus lofi"),
+        (r"\b(devotional|bhajan|spiritual|aarti)\b", "devotional bhajan"),
+        (r"\b(rainy|barish|monsoon|barsaat)\b", "rainy day hindi songs"),
+        (r"\b(punjabi|bhangra)\b", "punjabi party hits"),
+        (r"\b(english|pop|international)\b", "english pop hits"),
     ]
     for pat, q in mood_map:
         if re.search(pat, t):
             return {
-                "reply": f"For that mood, try this vibe — playing a mix around “{q}”.",
+                "reply": f"Got the vibe 🔥 Playing a mix for you...",
                 "action": "play_search",
                 "query": q,
             }
 
-    if re.search(r"\b(recommend|suggest|suggestion|kya sunu|what should i listen)\b", t):
+    if re.search(r"\b(liked|favourites|favorites|pasand)\b", t):
+        return {"reply": "Opening your liked songs ❤️", "action": "play_liked", "query": None}
+
+    if re.search(r"\b(recent|history|recently played)\b", t):
+        return {"reply": "Here's what you played recently.", "action": "show_recent", "query": None}
+
+    if re.search(r"\b(who are you|what are you|your name)\b", t):
         return {
-            "reply": "Tell me your mood (chill, sad, party, gym, romantic) or say “play [song name]”. I can also use your recent/liked taste when the AI key is configured.",
+            "reply": "I'm Nova 🎵 — your music buddy inside Groove. Tell me a mood or say “play [song name]”.",
+            "action": None,
+            "query": None,
+        }
+
+    if re.search(r"\b(what can you do|help|features)\b", t):
+        return {
+            "reply": "I can play any song, recommend by mood (sad, party, lofi, gym…), open your liked/recent tracks. Just say “play Kesariya” or “I’m feeling sad”.",
             "action": None,
             "query": None,
         }
 
     return {
-        "reply": "I'm Nova. Ask me for a mood playlist, say “play [song]”, or ask what Groove can do. (Tip: add GROQ_API_KEY or GEMINI_API_KEY in backend .env for smarter ChatGPT-style replies.)",
+        "reply": "Tell me a mood or say “play [song name]”. I’m listening 🎧",
         "action": None,
         "query": None,
     }
@@ -207,8 +192,15 @@ def parse_json_reply(text: str) -> Dict[str, Any]:
         return {"reply": text, "action": None, "query": None}
 
 
+def _clean_key(val: Optional[str]) -> Optional[str]:
+    if not val:
+        return None
+    val = val.strip().strip('"').strip("'")
+    return val or None
+
+
 async def call_groq(messages: List[Dict[str, str]]) -> str:
-    key = os.getenv("GROQ_API_KEY")
+    key = _clean_key(os.getenv("GROQ_API_KEY"))
     if not key:
         raise RuntimeError("no groq key")
     model = os.getenv("GROQ_MODEL", "llama-3.3-70b-versatile")
@@ -222,26 +214,12 @@ async def call_groq(messages: List[Dict[str, str]]) -> str:
             json={
                 "model": model,
                 "messages": messages,
-                "temperature": 0.7,
-                "max_tokens": 500,
+                "temperature": 0.6,
+                "max_tokens": 350,
             },
         )
         r.raise_for_status()
         return r.json()["choices"][0]["message"]["content"]
-
-
-def _clean_key(val: Optional[str]) -> Optional[str]:
-    if not val:
-        return None
-    val = val.strip().strip('"').strip("'")
-    return val or None
-
-
-def _clean_key(val: Optional[str]) -> Optional[str]:
-    if not val:
-        return None
-    val = val.strip().strip('"').strip("'")
-    return val or None
 
 
 async def call_gemini(messages: List[Dict[str, str]]) -> str:
@@ -262,7 +240,6 @@ async def call_gemini(messages: List[Dict[str, str]]) -> str:
     if not contents:
         contents = [{"role": "user", "parts": [{"text": "Hello"}]}]
 
-    # Prefer official systemInstruction; also prefix first user msg as backup
     body: Dict[str, Any] = {"contents": contents}
     if system:
         body["systemInstruction"] = {"parts": [{"text": system}]}
@@ -275,12 +252,7 @@ async def call_gemini(messages: List[Dict[str, str]]) -> str:
     preferred = os.getenv("GEMINI_MODEL", "").strip()
     if preferred:
         models.append(preferred)
-    # Current Gemini API model IDs (2026) — skip shut-down names
     models += [
-        "gemini-3.6-flash",
-        "gemini-3.5-flash",
-        "gemini-3.5-flash-lite",
-        "gemini-2.5-flash",
         "gemini-2.0-flash",
         "gemini-1.5-flash",
         "gemini-1.5-flash-latest",
@@ -289,7 +261,6 @@ async def call_gemini(messages: List[Dict[str, str]]) -> str:
     seen = set()
     models = [m for m in models if m and not (m in seen or seen.add(m))]
 
-    # Also try listing models available for this API key
     try:
         async with httpx.AsyncClient(timeout=20.0) as client:
             lr = await client.get(
@@ -342,7 +313,7 @@ async def call_gemini(messages: List[Dict[str, str]]) -> str:
 
 
 async def call_openai(messages: List[Dict[str, str]]) -> str:
-    key = os.getenv("OPENAI_API_KEY")
+    key = _clean_key(os.getenv("OPENAI_API_KEY"))
     if not key:
         raise RuntimeError("no openai key")
     model = os.getenv("OPENAI_MODEL", "gpt-4o-mini")
@@ -356,8 +327,8 @@ async def call_openai(messages: List[Dict[str, str]]) -> str:
             json={
                 "model": model,
                 "messages": messages,
-                "temperature": 0.7,
-                "max_tokens": 500,
+                "temperature": 0.6,
+                "max_tokens": 350,
             },
         )
         r.raise_for_status()
@@ -387,6 +358,7 @@ async def chat(
     has_groq = bool(_clean_key(os.getenv("GROQ_API_KEY")))
     has_gemini = bool(_clean_key(os.getenv("GEMINI_API_KEY")))
     has_openai = bool(_clean_key(os.getenv("OPENAI_API_KEY")))
+
     if not provider:
         if has_groq:
             provider = "groq"
@@ -416,7 +388,6 @@ async def chat(
         else:
             result = rule_based_reply(body.message, context)
     except Exception as e:
-        # graceful fallback
         result = rule_based_reply(body.message, context)
         err = str(e)[:300]
         result["reply"] = (
@@ -438,6 +409,7 @@ async def chat_status():
     has_groq = bool(_clean_key(os.getenv("GROQ_API_KEY")))
     has_gemini = bool(_clean_key(os.getenv("GEMINI_API_KEY")))
     has_openai = bool(_clean_key(os.getenv("OPENAI_API_KEY")))
+
     if not provider:
         if has_groq:
             provider = "groq"
@@ -447,13 +419,13 @@ async def chat_status():
             provider = "openai"
         else:
             provider = "rules"
-    # if user forced gemini but no key → rules
     if provider == "gemini" and not has_gemini:
         provider = "rules"
     if provider == "groq" and not has_groq:
         provider = "rules"
     if provider == "openai" and not has_openai:
         provider = "rules"
+
     return {
         "success": True,
         "provider": provider,
