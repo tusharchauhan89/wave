@@ -1,1 +1,3 @@
 
+GEMINI_MODEL=gemini-3.6-flash
+GEMINI_API_KEY=AQ.Ab8RN6LI378HlBYNbElEBPFMJ7f03ys_SqvokfWrQb_sq1bonw
