@@ -34,14 +34,10 @@
 .songs-container {
     display: flex;
     gap: 14px;
-
     overflow-x: auto;
     overflow-y: hidden;
-
     scroll-behavior: smooth;
-
     padding-bottom: 4px;
-
     scrollbar-width: none;
     -ms-overflow-style: none;
 }
@@ -54,4 +50,19 @@
     color: #b3b3b3;
     font-size: 14px;
     padding: 20px 0;
+}
+
+@media (max-width: 450px) {
+    .music-row {
+        margin-top: 12px;
+    }
+    .music-row-header h2 {
+        font-size: 18px;
+    }
+    .show-all-btn {
+        font-size: 12px;
+    }
+    .songs-container {
+        gap: 10px;
+    }
 }

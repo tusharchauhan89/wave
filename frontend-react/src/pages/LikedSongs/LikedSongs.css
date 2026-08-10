@@ -1,0 +1,249 @@
+.liked-page {
+    padding-bottom: 40px;
+    margin: -12px -22px 0;
+    min-height: 100%;
+}
+
+
+/* ===== HEADER ===== */
+
+.liked-header {
+    display: flex;
+    align-items: flex-end;
+    gap: 24px;
+    padding: 60px 32px 28px;
+    background: linear-gradient(180deg, #5038a0 0%, #2a1a5e 50%, #121212 100%);
+    border-radius: 8px 8px 0 0;
+}
+
+.liked-cover {
+    width: 192px;
+    height: 192px;
+    min-width: 192px;
+    background: linear-gradient(135deg, #450af5, #c4b0ff);
+    border-radius: 6px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 16px 40px rgba(0, 0, 0, 0.5);
+}
+
+.liked-meta {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    padding-bottom: 8px;
+}
+
+.liked-type {
+    font-size: 13px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    color: #fff;
+}
+
+.liked-meta h1 {
+    margin: 0;
+    font-size: 72px;
+    font-weight: 900;
+    letter-spacing: -2px;
+    color: #fff;
+    line-height: 1;
+}
+
+.liked-count {
+    margin: 0;
+    font-size: 14px;
+    color: rgba(255, 255, 255, 0.75);
+    font-weight: 500;
+}
+
+
+/* ===== PLAY BUTTON ===== */
+
+.liked-actions {
+    padding: 20px 32px;
+    background: linear-gradient(180deg, rgba(18, 18, 18, 0.4) 0%, #121212 100%);
+}
+
+.liked-play-btn {
+    width: 56px;
+    height: 56px;
+    border-radius: 50%;
+    border: none;
+    background: #1db954;
+    color: #000;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.35);
+    transition: transform 0.15s, background 0.15s;
+}
+
+.liked-play-btn:hover {
+    transform: scale(1.06);
+    background: #1ed760;
+}
+
+
+/* ===== LIST ===== */
+
+.liked-list {
+    padding: 0 24px 24px;
+}
+
+.liked-empty {
+    color: #b3b3b3;
+    font-size: 15px;
+    padding: 40px 8px;
+}
+
+.liked-list-header {
+    display: grid;
+    grid-template-columns: 40px 1fr 80px 48px;
+    gap: 12px;
+    padding: 8px 12px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    color: #b3b3b3;
+    font-size: 12px;
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    margin-bottom: 8px;
+}
+
+.liked-row {
+    display: grid;
+    grid-template-columns: 40px 1fr 80px 48px;
+    gap: 12px;
+    align-items: center;
+    padding: 8px 12px;
+    border-radius: 6px;
+    cursor: default;
+    transition: background 0.15s;
+}
+
+.liked-row:hover {
+    background: rgba(255, 255, 255, 0.08);
+}
+
+.liked-row.active {
+    background: rgba(255, 255, 255, 0.1);
+}
+
+.col-num {
+    color: #b3b3b3;
+    font-size: 14px;
+    text-align: center;
+}
+
+.playing-bars {
+    color: #1db954;
+    font-size: 12px;
+}
+
+.col-title {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    min-width: 0;
+    cursor: pointer;
+}
+
+.row-cover {
+    width: 40px;
+    height: 40px;
+    border-radius: 4px;
+    object-fit: cover;
+    background: #333;
+    flex-shrink: 0;
+}
+
+.row-info {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    min-width: 0;
+}
+
+.row-name {
+    font-size: 15px;
+    font-weight: 500;
+    color: #fff;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.row-name.green {
+    color: #1db954;
+}
+
+.row-artist {
+    font-size: 13px;
+    color: #b3b3b3;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.col-duration {
+    color: #b3b3b3;
+    font-size: 13px;
+    text-align: right;
+}
+
+.unlike-btn {
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    opacity: 0.7;
+    transition: opacity 0.15s, transform 0.15s;
+}
+
+.unlike-btn:hover {
+    opacity: 1;
+    transform: scale(1.1);
+}
+
+
+/* Responsive */
+
+@media (max-width: 700px) {
+    .liked-header {
+        flex-direction: column;
+        align-items: flex-start;
+        padding: 40px 20px 20px;
+    }
+    .liked-cover {
+        width: 140px;
+        height: 140px;
+        min-width: 140px;
+    }
+    .liked-meta h1 {
+        font-size: 40px;
+    }
+    .liked-list-header .col-duration,
+    .liked-row .col-duration {
+        display: none;
+    }
+    .liked-list-header,
+    .liked-row {
+        grid-template-columns: 36px 1fr 40px;
+    }
+}
+
+@media (max-width: 450px) {
+    /* jo bhi panel class hai — example */
+    .liked-panel,
+    .queue-panel,
+    .now-playing-panel {
+        bottom: 128px !important;
+        z-index: 40;
+    }
+}

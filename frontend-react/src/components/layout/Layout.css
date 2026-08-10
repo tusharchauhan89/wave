@@ -33,3 +33,60 @@
 .page-content::-webkit-scrollbar {
     display: none;
 }
+
+
+/* Now Playing panel space (desktop) */
+
+.app-layout.np-open .content-area {
+    margin-right: 360px;
+    transition: margin-right 0.28s ease;
+}
+
+.content-area {
+    transition: margin-right 0.28s ease;
+}
+
+
+/* Phone pe panel full overlay — content shift mat karo */
+
+@media (max-width: 900px) {
+    .app-layout.np-open .content-area {
+        margin-right: 0;
+    }
+}
+
+.app-layout.np-open .content-area {
+    margin-right: 360px;
+    transition: margin-right 0.28s ease;
+}
+
+.content-area {
+    transition: margin-right 0.28s ease;
+}
+
+@media (max-width: 900px) {
+    .app-layout.np-open .content-area {
+        margin-right: 0;
+    }
+}
+
+@media (max-width: 450px) {
+    .app-layout {
+        flex-direction: column;
+    }
+    .sidebar {
+        display: none !important;
+    }
+    .content-area {
+        width: 100%;
+        margin-right: 0 !important;
+    }
+    .app-layout.np-open .content-area {
+        margin-right: 0 !important;
+    }
+    .page-content {
+        padding: 10px 12px 16px;
+        /* player (72) + mobile-nav (56) */
+        padding-bottom: 140px;
+    }
+}

@@ -3,3 +3,61 @@
     flex-direction: column;
     gap: 8px;
 }
+
+.recent-section {
+    margin-bottom: 24px;
+}
+
+.recent-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 12px;
+}
+
+.recent-header h2 {
+    margin: 0;
+    color: #fff;
+    font-size: 22px;
+    font-weight: 700;
+}
+
+.show-all-btn {
+    background: transparent;
+    border: none;
+    color: #b3b3b3;
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: color 0.2s ease;
+}
+
+.show-all-btn:hover {
+    color: #fff;
+}
+
+.recent-empty {
+    color: #888;
+    margin: 8px 0 12px;
+}
+
+.recent-grid {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 16px;
+}
+
+
+/* Phone */
+
+@media (max-width: 450px) {
+    .recent-header h2 {
+        font-size: 18px;
+    }
+    .show-all-btn {
+        font-size: 12px;
+    }
+    .recent-grid {
+        gap: 10px;
+    }
+}

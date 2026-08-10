@@ -1,0 +1,208 @@
+.now-playing-panel {
+    position: fixed;
+    top: 0;
+    right: 0;
+    bottom: 90px;
+    width: 0;
+    background: #121212;
+    border-left: 1px solid #282828;
+    z-index: 50;
+    overflow: hidden;
+    transition: width 0.28s ease;
+    display: flex;
+    flex-direction: column;
+    box-shadow: -8px 0 24px rgba(0, 0, 0, 0.4);
+}
+
+.now-playing-panel.open {
+    width: 360px;
+}
+
+.np-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 16px 18px 12px;
+    flex-shrink: 0;
+}
+
+.np-title {
+    font-size: 14px;
+    font-weight: 700;
+    color: #fff;
+    max-width: 220px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.np-actions {
+    display: flex;
+    gap: 4px;
+}
+
+.np-btn {
+    background: none;
+    border: none;
+    color: #b3b3b3;
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+}
+
+.np-btn:hover {
+    color: #fff;
+    background: rgba(255, 255, 255, 0.08);
+}
+
+.np-btn.liked {
+    color: #1db954;
+}
+
+.np-body {
+    flex: 1;
+    overflow-y: auto;
+    padding: 8px 24px 24px;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.np-cover-wrap {
+    width: 100%;
+    aspect-ratio: 1;
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 12px 40px rgba(0, 0, 0, 0.55);
+    background: #282828;
+}
+
+.np-cover-wrap.playing {
+    animation: np-pulse 2.4s ease-in-out infinite;
+}
+
+@keyframes np-pulse {
+    0%,
+    100% {
+        box-shadow: 0 12px 40px rgba(0, 0, 0, 0.55);
+    }
+    50% {
+        box-shadow: 0 16px 48px rgba(29, 185, 84, 0.18);
+    }
+}
+
+.np-cover {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+}
+
+.np-meta {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.np-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 12px;
+}
+
+.np-name {
+    margin: 0;
+    font-size: 22px;
+    font-weight: 700;
+    color: #fff;
+    line-height: 1.25;
+}
+
+.np-artist {
+    margin: 6px 0 0;
+    font-size: 15px;
+    color: #b3b3b3;
+}
+
+.np-album {
+    margin: 4px 0 0;
+    font-size: 13px;
+    color: #a7a7a7;
+}
+
+@media (max-width: 900px) {
+    .now-playing-panel.open {
+        width: 100%;
+        left: 0;
+        right: 0;
+        border-left: none;
+    }
+}
+
+@media (max-width: 450px) {
+    .now-playing-panel {
+        /* player (72px) + mobile-nav (56px) ke UPAR hi rukna chahiye */
+        bottom: 128px !important;
+        top: 0;
+        z-index: 40;
+        /* player se NEICHE */
+    }
+    .now-playing-panel.open {
+        width: 100%;
+        left: 0;
+        right: 0;
+    }
+    .np-header {
+        padding: 12px 14px 8px;
+    }
+    .np-body {
+        padding: 6px 16px 20px;
+        gap: 14px;
+    }
+    .np-name {
+        font-size: 18px;
+    }
+    .np-artist {
+        font-size: 13px;
+    }
+}
+
+.now-playing-panel {
+    position: fixed;
+    top: 0;
+    right: 0;
+    bottom: 90px;
+    /* player ke upar rukna */
+    width: 0;
+    background: #121212;
+    border-left: 1px solid #282828;
+    z-index: 50;
+    /* player se bahut neeche */
+    overflow: hidden;
+    transition: width 0.28s ease;
+    display: flex;
+    flex-direction: column;
+}
+
+.now-playing-panel.open {
+    width: 360px;
+}
+
+@media (max-width: 450px) {
+    .now-playing-panel {
+        bottom: 128px !important;
+        /* player + nav */
+        z-index: 50 !important;
+    }
+    .now-playing-panel.open {
+        width: 100%;
+        left: 0;
+        right: 0;
+        border-left: none;
+    }
+}

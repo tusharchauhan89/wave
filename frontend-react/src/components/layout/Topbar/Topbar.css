@@ -213,3 +213,359 @@
 .voice-status-toast.error {
     background: #e91429;
 }
+
+@media (max-width: 450px) {
+    .topbar {
+        height: 56px;
+        padding: 0 10px;
+        gap: 8px;
+    }
+    .circle-btn {
+        width: 36px;
+        height: 36px;
+    }
+    .search-container {
+        height: 40px;
+        max-width: none;
+        padding: 0 12px;
+        gap: 8px;
+    }
+    .search-container input {
+        font-size: 13px;
+    }
+    .topbar-right {
+        gap: 6px;
+    }
+    .notification-btn {
+        width: 36px;
+        height: 36px;
+    }
+    .profile-btn {
+        padding: 6px 10px;
+    }
+    .profile-name {
+        display: none;
+        /* sirf icon dikhao */
+    }
+}
+
+@media (max-width: 450px) {
+    .topbar {
+        height: 56px;
+        padding: 0 10px;
+        gap: 8px;
+    }
+    .topbar-left .circle-btn:last-child {
+        display: none;
+        /* forward button hide */
+    }
+    .circle-btn {
+        width: 34px;
+        height: 34px;
+    }
+    .search-container {
+        height: 38px;
+        max-width: none;
+        flex: 1;
+        padding: 0 12px;
+        gap: 8px;
+    }
+    .search-container input {
+        font-size: 13px;
+    }
+    .profile-name {
+        display: none;
+    }
+    .profile-btn {
+        padding: 6px 8px;
+    }
+}
+
+
+/* ═══════ NOTIFICATION SYSTEM ═══════ */
+
+.notification-wrapper {
+    position: relative;
+}
+
+.notification-btn {
+    position: relative;
+    background: #222;
+    border: none;
+    color: #fff;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: background 0.2s;
+}
+
+.notification-btn:hover {
+    background: #333;
+}
+
+.notification-dot {
+    position: absolute;
+    top: 6px;
+    right: 6px;
+    min-width: 16px;
+    height: 16px;
+    background: #1db954;
+    color: #000;
+    font-size: 10px;
+    font-weight: 700;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0 4px;
+}
+
+
+/* Dropdown */
+
+.notification-dropdown {
+    position: absolute;
+    top: 52px;
+    right: 0;
+    width: 360px;
+    max-height: 420px;
+    background: #181818;
+    border: 1px solid #2a2a2a;
+    border-radius: 12px;
+    box-shadow: 0 16px 48px rgba(0, 0, 0, 0.6);
+    z-index: 1000;
+    overflow: hidden;
+    animation: dropdownFade 0.2s ease;
+}
+
+@keyframes dropdownFade {
+    from {
+        opacity: 0;
+        transform: translateY(-8px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.notification-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 14px 16px;
+    border-bottom: 1px solid #2a2a2a;
+}
+
+.notification-header h3 {
+    margin: 0;
+    font-size: 15px;
+    font-weight: 700;
+}
+
+.notification-header button {
+    background: none;
+    border: none;
+    color: #1db954;
+    font-size: 12px;
+    font-weight: 600;
+    cursor: pointer;
+}
+
+.notification-list {
+    max-height: 340px;
+    overflow-y: auto;
+}
+
+.no-notifications {
+    padding: 32px 16px;
+    text-align: center;
+    color: #666;
+    font-size: 14px;
+}
+
+.notification-item {
+    display: flex;
+    gap: 12px;
+    padding: 14px 16px;
+    border-bottom: 1px solid #222;
+    transition: background 0.15s;
+    position: relative;
+}
+
+.notification-item:hover {
+    background: #222;
+}
+
+.notification-item.read {
+    opacity: 0.7;
+}
+
+.notification-item.premium {
+    background: linear-gradient( 90deg, rgba(251, 191, 36, 0.08), transparent);
+}
+
+.notification-icon {
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    background: #282828;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #1db954;
+    flex-shrink: 0;
+}
+
+.notification-item.premium .notification-icon {
+    background: linear-gradient(135deg, #fbbf24, #f59e0b);
+    color: #000;
+}
+
+.notification-content {
+    flex: 1;
+    min-width: 0;
+}
+
+.notification-title {
+    margin: 0 0 4px;
+    font-size: 14px;
+    font-weight: 600;
+}
+
+.notification-message {
+    margin: 0 0 6px;
+    font-size: 13px;
+    color: #aaa;
+    line-height: 1.4;
+}
+
+.notification-time {
+    font-size: 11px;
+    color: #666;
+}
+
+.notification-close {
+    background: none;
+    border: none;
+    color: #666;
+    cursor: pointer;
+    padding: 4px;
+    border-radius: 4px;
+    opacity: 0;
+    transition: opacity 0.15s;
+}
+
+.notification-item:hover .notification-close {
+    opacity: 1;
+}
+
+.notification-close:hover {
+    color: #fff;
+    background: #333;
+}
+
+
+/* ═══════ MILESTONE CARD ═══════ */
+
+.milestone-card {
+    display: flex;
+    gap: 14px;
+    padding: 16px;
+    background: rgba(29, 185, 84, 0.08);
+    border-bottom: 1px solid #2a2a2a;
+    align-items: flex-start;
+}
+
+.milestone-card.unlocked {
+    background: linear-gradient(90deg, rgba(251, 191, 36, 0.12), transparent);
+}
+
+.milestone-icon {
+    width: 42px;
+    height: 42px;
+    border-radius: 12px;
+    background: #222;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #1db954;
+    flex-shrink: 0;
+}
+
+.milestone-icon.premium {
+    background: linear-gradient(135deg, #fbbf24, #f59e0b);
+    color: #000;
+}
+
+.milestone-content {
+    flex: 1;
+}
+
+.milestone-title {
+    margin: 0 0 4px;
+    font-size: 14px;
+    font-weight: 700;
+}
+
+.milestone-desc {
+    margin: 0 0 10px;
+    font-size: 12px;
+    color: #999;
+}
+
+.progress-bar {
+    height: 6px;
+    background: #2a2a2a;
+    border-radius: 10px;
+    overflow: hidden;
+}
+
+.progress-fill {
+    height: 100%;
+    background: linear-gradient(90deg, #1db954, #1ed760);
+    border-radius: 10px;
+    transition: width 0.6s ease;
+}
+
+.profile-info {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 2px;
+}
+
+.profile-name {
+    font-size: 14px;
+    font-weight: 600;
+    color: #fff;
+    line-height: 1.2;
+}
+
+.topbar-premium-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 3px;
+    background: linear-gradient(135deg, #fbbf24, #f59e0b);
+    color: #000;
+    font-size: 10px;
+    font-weight: 700;
+    padding: 2px 7px;
+    border-radius: 20px;
+    letter-spacing: 0.3px;
+    box-shadow: 0 0 10px rgba(251, 191, 36, 0.4);
+    animation: premiumGlow 2s ease-in-out infinite alternate;
+}
+
+@keyframes premiumGlow {
+    from {
+        box-shadow: 0 0 6px rgba(251, 191, 36, 0.35);
+    }
+    to {
+        box-shadow: 0 0 14px rgba(251, 191, 36, 0.7);
+    }
+}

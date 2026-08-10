@@ -1,58 +1,32 @@
 import "./Register.css";
-
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-
-import {
-  Eye,
-  EyeOff,
-  Music,
-} from "lucide-react";
-
+import { Eye, EyeOff } from "lucide-react";
 import { register } from "../../services/auth";
+
+// Put the Grove logo image in your assets folder and update the path
+import groveLogo from "../../assets/image.png";
 
 function Register() {
   const navigate = useNavigate();
 
-  const [fullName, setFullName] =
-    useState("");
+  const [fullName, setFullName] = useState("");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [showPassword, setShowPassword] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState("");
 
-  const [email, setEmail] =
-    useState("");
-
-  const [password, setPassword] =
-    useState("");
-
-  const [showPassword, setShowPassword] =
-    useState(false);
-
-  const [loading, setLoading] =
-    useState(false);
-
-  const [error, setError] =
-    useState("");
-
-  const handleSubmit = async (
-    e: React.FormEvent
-  ) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-
     setLoading(true);
     setError("");
 
     try {
-      await register(
-        email,
-        password,
-        fullName
-      );
-
+      await register(email, password, fullName);
       navigate("/");
     } catch (err: any) {
-      setError(
-        err?.response?.data?.detail ||
-          "Registration failed."
-      );
+      setError(err?.response?.data?.detail || "Registration failed.");
     } finally {
       setLoading(false);
     }
@@ -60,122 +34,85 @@ function Register() {
 
   return (
     <div className="register-page">
-      <div className="register-overlay">
-        <div className="register-card">
-
-          <div className="register-logo">
-            <Music size={46} />
-
-            <h1>Grove</h1>
-
-            <p>
-              Create your account
+      <div className="register-card">
+        {/* LEFT SIDE */}
+        <div className="register-left">
+          <div className="left-header">
+            <div className="logo-row">
+              <span className="logo-icon">♪</span>
+              <h1>Grove</h1>
+            </div>
+            <p className="tagline">
+              Millions of songs.<br />
+              Free on Grove.
             </p>
           </div>
 
-          <h2>Join Grove</h2>
-
-          <form
-            onSubmit={handleSubmit}
-          >
-            <label>
-              Full Name
-            </label>
-
-            <input
-              type="text"
-              placeholder="John Doe"
-              value={fullName}
-              onChange={(e) =>
-                setFullName(
-                  e.target.value
-                )
-              }
-              required
-            />
-
-            <label>
-              Email
-            </label>
-
-            <input
-              type="email"
-              placeholder="example@email.com"
-              value={email}
-              onChange={(e) =>
-                setEmail(
-                  e.target.value
-                )
-              }
-              required
-            />
-
-            <label>
-              Password
-            </label>
-
-            <div className="password-box">
-
+          <form onSubmit={handleSubmit} className="register-form">
+            <div className="form-group">
+              <label>Full Name</label>
               <input
-                type={
-                  showPassword
-                    ? "text"
-                    : "password"
-                }
-                placeholder="Password"
-                value={password}
-                onChange={(e) =>
-                  setPassword(
-                    e.target.value
-                  )
-                }
+                type="text"
+                placeholder="John Doe"
+                value={fullName}
+                onChange={(e) => setFullName(e.target.value)}
                 required
               />
-
-              <button
-                type="button"
-                className="password-toggle"
-                onClick={() =>
-                  setShowPassword(
-                    !showPassword
-                  )
-                }
-              >
-                {showPassword ? (
-                  <EyeOff size={18} />
-                ) : (
-                  <Eye size={18} />
-                )}
-              </button>
-
             </div>
 
-            {error && (
-              <p className="register-error">
-                {error}
-              </p>
-            )}
+            <div className="form-group">
+              <label>Email</label>
+              <input
+                type="email"
+                placeholder="example@email.com"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                required
+              />
+            </div>
 
-            <button
-              className="register-button"
-              type="submit"
-              disabled={loading}
-            >
-              {loading
-                ? "Creating Account..."
-                : "Create Account"}
+            <div className="form-group">
+              <label>Password</label>
+              <div className="password-wrapper">
+                <input
+                  type={showPassword ? "text" : "password"}
+                  placeholder="Password"
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                  required
+                />
+                <button
+                  type="button"
+                  className="toggle-password"
+                  onClick={() => setShowPassword(!showPassword)}
+                >
+                  {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
+                </button>
+              </div>
+            </div>
+
+            {error && <p className="error-text">{error}</p>}
+
+            <button type="submit" className="submit-btn" disabled={loading}>
+              {loading ? "Creating Account..." : "Create Account"}
             </button>
-
           </form>
 
-          <div className="register-footer">
-            Already have an account?
+          <p className="footer-text">
+            Already have an account?{" "}
+            <Link to="/login">Log In</Link>
+          </p>
+        </div>
 
-            <Link to="/login">
-              Log In
-            </Link>
-          </div>
-
+        {/* RIGHT SIDE - Grove Logo */}
+        <div className="register-right">
+          <img
+            src={groveLogo}
+            alt="Grove"
+            className="grove-img"
+          />
+          <h3>Join the groove</h3>
+          <p>Create your free account and start streaming.</p>
         </div>
       </div>
     </div>
