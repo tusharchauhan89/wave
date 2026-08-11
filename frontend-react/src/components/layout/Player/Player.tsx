@@ -1,80 +1,96 @@
-import "./Player.css";
+import { useMemo, useRef, useState } from "react";
 
 import {
-  Heart,
-  Shuffle,
-  SkipBack,
-  SkipForward,
   Play,
   Pause,
+  SkipBack,
+  SkipForward,
+  Shuffle,
   Repeat,
-  ListMusic,
-  Laptop2,
+  Repeat1,
   Volume2,
+  VolumeX,
+  Heart,
+  MoreHorizontal,
+  ListMusic,
   X,
 } from "lucide-react";
 
-import {
-  useEffect,
-  useState,
-} from "react";
-
 import { usePlayer } from "../../../context/PlayerContext";
 
-import {
-  likeSong,
-  unlikeSong,
-  getLikedSongs,
-} from "../../../services/music";
+import "./Player.css";
 
-type PlayerProps = {
-  showQueue: boolean;
-  setShowQueue: React.Dispatch<
-    React.SetStateAction<boolean>
-  >;
-};
+function formatTime(sec: number) {
+  if (!sec || isNaN(sec)) return "0:00";
 
-function formatTime(seconds: number) {
-  if (!seconds || Number.isNaN(seconds)) {
-    return "0:00";
-  }
+  const m = Math.floor(sec / 60);
+  const s = Math.floor(sec % 60);
 
-  const mins = Math.floor(seconds / 60);
-  const secs = Math.floor(seconds % 60);
-
-  return `${mins}:${secs
+  return `${m}:${s
     .toString()
     .padStart(2, "0")}`;
 }
 
-function Player({
-  showQueue,
-  setShowQueue,
-}: PlayerProps) {
+function getImage(song: any): string {
+  if (!song?.image) return "";
+
+  if (typeof song.image === "string") {
+    return song.image;
+  }
+
+  const arr = song.image as {
+    quality: string;
+    url: string;
+  }[];
+
+  return (
+    arr.find(
+      (i) => i.quality === "500x500"
+    )?.url ||
+    arr.find(
+      (i) => i.quality === "150x150"
+    )?.url ||
+    arr[0]?.url ||
+    ""
+  );
+}
+
+function getArtist(song: any): string {
+  return (
+    song?.artists?.primary
+      ?.map((a: any) => a.name)
+      .join(", ") ||
+    song?.primaryArtists ||
+    "Unknown Artist"
+  );
+}
+
+export default function PlayerBar() {
   const {
     currentSong,
     queue,
     currentIndex,
 
     isPlaying,
+    isLoading,
 
     progress,
     duration,
 
     volume,
+    isMuted,
 
     shuffle,
     repeat,
 
-    play,
-    pause,
-
+    togglePlay,
     next,
     previous,
 
     seek,
 
     setVolume,
+    toggleMute,
 
     toggleShuffle,
     cycleRepeat,
@@ -82,464 +98,778 @@ function Player({
     playSong,
   } = usePlayer();
 
-  const [
-    likedSongs,
-    setLikedSongs,
-  ] = useState<string[]>([]);
+  const progressRef =
+    useRef<HTMLInputElement | null>(null);
 
-  useEffect(() => {
-    const loadLikedSongs =
-      async () => {
-        try {
-          const response =
-            await getLikedSongs();
+  const [isExpanded, setIsExpanded] =
+    useState(false);
 
-          const songs =
-            response?.songs ??
-            response?.data ??
-            [];
+  const [showQueue, setShowQueue] =
+    useState(false);
 
-          setLikedSongs(
-            songs.map(
-              (song: any) =>
-                String(song.id)
-            )
-          );
-        } catch (error) {
-          console.error(
-            "Failed to load liked songs",
-            error
-          );
-        }
-      };
+  /* =====================================================
+     WAVEFORM
+  ===================================================== */
 
-    loadLikedSongs();
-  }, []);
+  const bars = useMemo(
+    () =>
+      Array.from(
+        { length: 48 },
+        (_, i) => {
+          const wave =
+            Math.sin(i * 0.35) *
+              0.5 +
+            0.5;
 
-  const handleLike =
-    async () => {
-      if (!currentSong) return;
-
-      try {
-        if (
-          likedSongs.includes(
-            currentSong.id
-          )
-        ) {
-          await unlikeSong(
-            currentSong.id
-          );
-
-          setLikedSongs(
-            (prev) =>
-              prev.filter(
-                (id) =>
-                  id !==
-                  currentSong.id
+          const noise =
+            Math.abs(
+              Math.sin(
+                i * 1.7 + 2
               )
-          );
-        } else {
-          await likeSong(
-            currentSong
-          );
+            ) * 0.4;
 
-          setLikedSongs(
-            (prev) => [
-              ...prev,
-              currentSong.id,
-            ]
+          return Math.round(
+            (
+              wave * 0.6 +
+              noise * 0.4
+            ) * 100
           );
         }
-      } catch (error) {
-        console.error(error);
-      }
-    };
+      ),
+    [currentSong?.id]
+  );
+
+  const progressPct =
+    duration > 0
+      ? (progress / duration) * 100
+      : 0;
 
   const image =
-    currentSong?.image?.[2]?.url ||
-    currentSong?.image?.[1]?.url ||
-    currentSong?.image?.[0]?.url ||
-    "";
+    getImage(currentSong);
 
   const artist =
-    currentSong?.artists?.primary
-      ?.map(
-        (artist) =>
-          artist.name
-      )
-      .join(", ") ||
-    "Unknown Artist";
+    getArtist(currentSong);
+
+  /* =====================================================
+     CIRCULAR QUEUE
+
+     Example:
+
+     Queue:
+     A B C D E
+
+     If B is playing:
+
+     Next Up:
+     C D E A
+  ===================================================== */
+
+  const orderedQueue =
+    currentIndex >= 0 &&
+    queue.length > 0
+      ? [
+          ...queue.slice(
+            currentIndex + 1
+          ),
+          ...queue.slice(
+            0,
+            currentIndex
+          ),
+        ]
+      : queue;
+
+  /* =====================================================
+     NO SONG
+  ===================================================== */
+
+  if (!currentSong) {
+    return null;
+  }
+
+  /* =====================================================
+     PLAY / PAUSE
+  ===================================================== */
+
+  const handlePlay = (
+    e: React.MouseEvent
+  ) => {
+    e.stopPropagation();
+
+    togglePlay();
+  };
+
+  /* =====================================================
+     MOBILE EXPANDED PLAYER
+  ===================================================== */
+
+  const openExpandedPlayer = () => {
+    setIsExpanded(true);
+  };
+
+  const closeExpandedPlayer = (
+    e: React.MouseEvent
+  ) => {
+    e.stopPropagation();
+
+    setIsExpanded(false);
+  };
+
+  /* =====================================================
+     QUEUE TOGGLE
+  ===================================================== */
+
+  const toggleQueue = (
+    e: React.MouseEvent
+  ) => {
+    e.stopPropagation();
+
+    setShowQueue(
+      (previous) => !previous
+    );
+  };
+
+  /* =====================================================
+     PLAY QUEUED SONG
+  ===================================================== */
+
+  const handleQueueSong = async (
+    song: any
+  ) => {
+    try {
+      /*
+       * Always keep the original queue.
+       *
+       * This is important because currentIndex
+       * must remain tied to the original queue.
+       */
+      await playSong(
+        song,
+        queue
+      );
+
+      setShowQueue(false);
+    } catch (error) {
+      console.error(
+        "Queue song play failed:",
+        error
+      );
+    }
+  };
 
   return (
     <>
-      <footer className="player">
+      {/* =================================================
+          PLAYER
+      ================================================= */}
 
-        {/* LEFT */}
+      <div
+        className={`player ${
+          isExpanded
+            ? "player-mobile-expanded"
+            : ""
+        }`}
+        onClick={() => {
+          if (
+            window.innerWidth <= 450 &&
+            !isExpanded
+          ) {
+            openExpandedPlayer();
+          }
+        }}
+      >
+        {/* =================================================
+            MOBILE EXPANDED HEADER
+        ================================================= */}
+
+        {isExpanded && (
+          <div className="mobile-player-header">
+            <button
+              type="button"
+              className="mobile-player-close"
+              onClick={
+                closeExpandedPlayer
+              }
+              aria-label="Close player"
+            >
+              <X size={22} />
+            </button>
+
+            <span>
+              NOW PLAYING
+            </span>
+
+            <div className="mobile-player-header-spacer" />
+          </div>
+        )}
+
+        {/* =================================================
+            LEFT — SONG
+        ================================================= */}
 
         <div className="player-left">
+          <div className="player-cover">
+            {image ? (
+              <img
+                src={image}
+                alt={currentSong.name}
+              />
+            ) : (
+              <div className="player-cover-placeholder">
+                ♪
+              </div>
+            )}
+          </div>
 
-          <img
-            src={image}
-            alt={
-              currentSong?.name || ""
-            }
-            className="player-cover"
-          />
+          <div className="player-song-details">
+            <div
+              className="player-song-name"
+              title={currentSong.name}
+            >
+              {currentSong.name}
+            </div>
 
-          <div className="player-song">
-
-            <h4>
-              {currentSong?.name ??
-                "Nothing Playing"}
-            </h4>
-
-            <p>{artist}</p>
-
+            <div
+              className="player-song-artist"
+              title={artist}
+            >
+              {artist}
+            </div>
           </div>
 
           <button
-            className={`icon-button ${
-              likedSongs.includes(
-                currentSong?.id || ""
-              )
-                ? "active"
-                : ""
-            }`}
-            onClick={handleLike}
+            type="button"
+            className="player-add"
+            onClick={(e) =>
+              e.stopPropagation()
+            }
+            title="Like"
           >
-            <Heart
-              size={18}
-              fill={
-                likedSongs.includes(
-                  currentSong?.id || ""
-                )
-                  ? "#1DB954"
-                  : "none"
-              }
-            />
+            <Heart size={18} />
           </button>
-
         </div>
 
-        {/* CENTER */}
+        {/* =================================================
+            CENTER
+        ================================================= */}
 
         <div className="player-center">
+          {/* WAVEFORM */}
 
-          <div className="player-controls">
+          <div className="player-wave">
+            {bars.map(
+              (height, index) => {
+                const activeBars =
+                  Math.floor(
+                    (progressPct / 100) *
+                      bars.length
+                  );
+
+                return (
+                  <span
+                    key={index}
+                    className={
+                      index <
+                      activeBars
+                        ? "player-wave-bar active"
+                        : "player-wave-bar"
+                    }
+                    style={{
+                      height:
+                        `${Math.max(
+                          12,
+                          height
+                        )}%`,
+                    }}
+                  />
+                );
+              }
+            )}
+          </div>
+
+          {/* CONTROLS */}
+
+          <div
+            className="player-controls"
+            onClick={(e) =>
+              e.stopPropagation()
+            }
+          >
+            {/* SHUFFLE */}
 
             <button
-              className={`icon-button ${
+              type="button"
+              className={
                 shuffle
-                  ? "active"
-                  : ""
-              }`}
+                  ? "player-icon active"
+                  : "player-icon"
+              }
               onClick={
                 toggleShuffle
               }
+              title="Shuffle"
             >
-              <Shuffle size={18} />
+              <Shuffle size={16} />
             </button>
 
+            {/* PREVIOUS */}
+
             <button
-              className="icon-button"
+              type="button"
+              className="player-icon"
               onClick={previous}
+              title="Previous"
             >
-              <SkipBack size={20} />
+              <SkipBack
+                size={18}
+                fill="currentColor"
+              />
             </button>
 
+            {/* PLAY */}
+
             <button
-              className="play-button-main"
-              onClick={() =>
+              type="button"
+              className="player-main-button"
+              onClick={handlePlay}
+              disabled={isLoading}
+              title={
                 isPlaying
-                  ? pause()
-                  : play()
+                  ? "Pause"
+                  : "Play"
               }
             >
               {isPlaying ? (
                 <Pause
                   size={20}
-                  fill="black"
+                  fill="currentColor"
                 />
               ) : (
                 <Play
                   size={20}
-                  fill="black"
+                  fill="currentColor"
                 />
               )}
             </button>
 
+            {/* NEXT */}
+
             <button
-              className="icon-button"
+              type="button"
+              className="player-icon"
               onClick={next}
+              title="Next"
             >
-              <SkipForward size={20} />
+              <SkipForward
+                size={18}
+                fill="currentColor"
+              />
             </button>
-                        <button
-              className={`icon-button ${
+
+            {/* REPEAT */}
+
+            <button
+              type="button"
+              className={
                 repeat !== "off"
-                  ? "active"
-                  : ""
-              }`}
-              onClick={cycleRepeat}
+                  ? "player-icon active"
+                  : "player-icon"
+              }
+              onClick={
+                cycleRepeat
+              }
+              title={`Repeat: ${repeat}`}
             >
-              <div className="repeat-icon">
-                <Repeat size={18} />
-
-                {repeat === "one" && (
-                  <span className="repeat-badge">
-                    1
-                  </span>
-                )}
-              </div>
+              {repeat === "one" ? (
+                <Repeat1 size={16} />
+              ) : (
+                <Repeat size={16} />
+              )}
             </button>
-
           </div>
 
-          <div className="progress-row">
+          {/* PROGRESS */}
 
-            <span>
-              {formatTime(progress)}
+          <div
+            className="player-progress"
+            onClick={(e) =>
+              e.stopPropagation()
+            }
+          >
+            <span className="player-time">
+              {formatTime(
+                progress
+              )}
             </span>
 
             <input
+              ref={progressRef}
               type="range"
-              className="progress-bar"
               min={0}
               max={duration || 0}
+              step={0.1}
               value={progress}
               onChange={(e) =>
                 seek(
-                  Number(
+                  parseFloat(
                     e.target.value
                   )
                 )
               }
+              className="player-progress-slider"
             />
 
-            <span>
-              {formatTime(duration)}
+            <span className="player-time">
+              {formatTime(
+                duration
+              )}
             </span>
-
           </div>
-
         </div>
 
-        {/* RIGHT */}
+        {/* =================================================
+            RIGHT
+        ================================================= */}
 
-        <div className="player-right">
+        <div
+          className="player-right"
+          onClick={(e) =>
+            e.stopPropagation()
+          }
+        >
+          {/* QUEUE */}
 
           <button
-            className={`icon-button ${
+            type="button"
+            className={
               showQueue
-                ? "active"
-                : ""
-            }`}
-            onClick={() =>
-              setShowQueue(
-                (prev) => !prev
-              )
+                ? "player-right-icon queue-button active"
+                : "player-right-icon queue-button"
+            }
+            title="Playing Queue"
+            aria-label="Playing Queue"
+            onClick={
+              toggleQueue
             }
           >
             <ListMusic size={18} />
           </button>
 
-          <button className="icon-button">
-            <Laptop2 size={18} />
+          {/* MORE */}
+
+          <button
+            type="button"
+            className="player-right-icon"
+            title="More"
+          >
+            <MoreHorizontal
+              size={18}
+            />
           </button>
 
-          <Volume2 size={18} />
+          {/* VOLUME */}
 
-          <input
-            type="range"
-            min={0}
-            max={100}
-            value={volume * 100}
-            className="volume-slider"
-            onChange={(e) =>
-              setVolume(
-                Number(
-                  e.target.value
-                ) / 100
-              )
-            }
-          />
-
-        </div>
-
-      </footer>
-
-      {/* QUEUE */}
-
-      {showQueue && (
-
-        <div className="queue-panel">
-
-          <div className="queue-header">
-
-            <h3>
-              Playing Queue
-            </h3>
-
+          <div className="player-volume">
             <button
-              className="icon-button"
-              onClick={() =>
-                setShowQueue(
-                  false
+              type="button"
+              className="player-right-icon"
+              onClick={
+                toggleMute
+              }
+              title="Mute"
+            >
+              {isMuted ||
+              volume === 0 ? (
+                <VolumeX size={17} />
+              ) : (
+                <Volume2 size={17} />
+              )}
+            </button>
+
+            <input
+              type="range"
+              min={0}
+              max={1}
+              step={0.01}
+              value={
+                isMuted
+                  ? 0
+                  : volume
+              }
+              onChange={(e) =>
+                setVolume(
+                  parseFloat(
+                    e.target.value
+                  )
                 )
               }
+              className="player-volume-slider"
+            />
+          </div>
+        </div>
+
+        {/* =================================================
+            MOBILE PLAY BUTTON
+        ================================================= */}
+
+        <button
+          type="button"
+          className="mobile-mini-play"
+          onClick={handlePlay}
+          disabled={isLoading}
+          aria-label={
+            isPlaying
+              ? "Pause"
+              : "Play"
+          }
+        >
+          {isPlaying ? (
+            <Pause
+              size={18}
+              fill="currentColor"
+            />
+          ) : (
+            <Play
+              size={18}
+              fill="currentColor"
+            />
+          )}
+        </button>
+
+        {/* =================================================
+            MOBILE EXPANDED ARTWORK
+        ================================================= */}
+
+        {isExpanded && (
+          <div
+            className="mobile-expanded-content"
+            onClick={(e) =>
+              e.stopPropagation()
+            }
+          >
+            <div className="mobile-expanded-art">
+              {image ? (
+                <img
+                  src={image}
+                  alt={
+                    currentSong.name
+                  }
+                />
+              ) : (
+                <div>♪</div>
+              )}
+            </div>
+
+            <div className="mobile-expanded-info">
+              <h2>
+                {currentSong.name}
+              </h2>
+
+              <p>
+                {artist}
+              </p>
+            </div>
+          </div>
+        )}
+      </div>
+
+      {/* =================================================
+          QUEUE PANEL
+      ================================================= */}
+
+      {showQueue && (
+        <div
+          className="player-queue-panel"
+          onClick={(e) =>
+            e.stopPropagation()
+          }
+        >
+          {/* QUEUE HEADER */}
+
+          <div className="player-queue-header">
+            <div>
+              <h3>
+                Playing Queue
+              </h3>
+
+              <span>
+                {queue.length}{" "}
+                {queue.length === 1
+                  ? "song"
+                  : "songs"}
+              </span>
+            </div>
+
+            <button
+              type="button"
+              className="queue-close-btn"
+              onClick={() =>
+                setShowQueue(false)
+              }
+              title="Close queue"
+              aria-label="Close queue"
             >
               <X size={18} />
             </button>
-
           </div>
 
-          <div className="queue-list">
+          {/* QUEUE CONTENT */}
 
+          <div className="player-queue-list">
             {queue.length === 0 ? (
+              <div className="player-queue-empty">
+                <ListMusic
+                  size={32}
+                />
 
-              <p>
-                No songs in queue.
-              </p>
+                <h4>
+                  Queue is empty
+                </h4>
 
+                <p>
+                  Songs you play will
+                  appear here.
+                </p>
+              </div>
             ) : (
-
               <>
+                {/* NOW PLAYING */}
 
                 {currentSong && (
-
                   <>
-
-                    <div className="queue-section-title">
+                    <div className="player-queue-section-title">
                       Now Playing
                     </div>
 
-                    <div
-                      className="queue-item active"
+                    <button
+                      type="button"
+                      className="player-queue-item current"
                       onClick={() =>
-                        playSong(
-                          currentSong,
-                          queue
+                        handleQueueSong(
+                          currentSong
                         )
                       }
                     >
-
-                      <img
-                        src={
-                          currentSong.image?.[2]?.url ||
-                          currentSong.image?.[1]?.url ||
-                          currentSong.image?.[0]?.url ||
-                          ""
-                        }
-                        alt={currentSong.name}
-                      />
-
-                      <div className="queue-song-info">
-
-                        <strong>
-                          {currentSong.name}
-                        </strong>
-
-                        <p>
-                          {currentSong
-                            .artists
-                            ?.primary
-                            ?.map(
-                              (artist) =>
-                                artist.name
-                            )
-                            .join(", ")}
-                        </p>
-
-                        <span className="now-playing">
-                          ● Playing
-                        </span>
-
+                      <div className="queue-item-image">
+                        {getImage(
+                          currentSong
+                        ) ? (
+                          <img
+                            src={getImage(
+                              currentSong
+                            )}
+                            alt={
+                              currentSong.name
+                            }
+                          />
+                        ) : (
+                          <span>
+                            ♪
+                          </span>
+                        )}
                       </div>
 
-                    </div>
+                      <div className="queue-item-info">
+                        <strong>
+                          {
+                            currentSong.name
+                          }
+                        </strong>
 
-                    <div className="queue-section-title">
-                      Next Up
-                    </div>
+                        <span>
+                          {getArtist(
+                            currentSong
+                          )}
+                        </span>
 
+                        <small>
+                          ● Playing
+                        </small>
+                      </div>
+                    </button>
+
+                    {orderedQueue.length >
+                      0 && (
+                      <div className="player-queue-section-title">
+                        Next Up
+                      </div>
+                    )}
                   </>
-
                 )}
 
-                {[
-                  ...queue.slice(
-                    currentIndex + 1
-                  ),
-                  ...queue.slice(
-                    0,
-                    currentIndex
-                  ),
-                ].map((song) => (
-                                      <div
-                    key={song.id}
-                    className={`queue-item ${
-                      currentSong?.id ===
-                      song.id
-                        ? "active"
-                        : ""
-                    }`}
-                    onClick={() =>
-                      playSong(
-                        song,
-                        queue
-                      )
-                    }
-                  >
+                {/* =================================================
+                    CIRCULAR NEXT QUEUE
 
-                    <img
-                      src={
-                        song.image?.[2]
-                          ?.url ||
-                        song.image?.[1]
-                          ?.url ||
-                        song.image?.[0]
-                          ?.url ||
-                        ""
+                    If:
+                    A B C D E
+
+                    and B is playing:
+
+                    C D E A
+                ================================================= */}
+
+                {orderedQueue.map(
+                  (
+                    song: any,
+                    index: number
+                  ) => (
+                    <button
+                      key={
+                        song.id ||
+                        index
                       }
-                      alt={song.name}
-                    />
+                      type="button"
+                      className="player-queue-item"
+                      onClick={() =>
+                        handleQueueSong(
+                          song
+                        )
+                      }
+                    >
+                      <div className="queue-item-image">
+                        {getImage(
+                          song
+                        ) ? (
+                          <img
+                            src={getImage(
+                              song
+                            )}
+                            alt={
+                              song.name
+                            }
+                          />
+                        ) : (
+                          <span>
+                            ♪
+                          </span>
+                        )}
+                      </div>
 
-                    <div className="queue-song-info">
+                      <div className="queue-item-info">
+                        <strong>
+                          {song.name}
+                        </strong>
 
-                      <strong>
-                        {song.name}
-                      </strong>
+                        <span>
+                          {getArtist(
+                            song
+                          )}
+                        </span>
+                      </div>
+                    </button>
+                  )
+                )}
 
-                      <p>
-                        {song
-                          .artists
-                          ?.primary
-                          ?.map(
-                            (
-                              artist
-                            ) =>
-                              artist.name
-                          )
-                          .join(", ")}
-                      </p>
-
-                    </div>
-
+                {orderedQueue.length ===
+                  0 && (
+                  <div className="player-queue-no-more">
+                    No more songs in queue
                   </div>
-
-                ))}
-
+                )}
               </>
-
             )}
-
           </div>
-
         </div>
-
       )}
-          </>
+    </>
   );
 }
-
-export default Player;

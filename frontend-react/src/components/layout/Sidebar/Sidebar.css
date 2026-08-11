@@ -1,232 +1,333 @@
+/* =========================================================
+   GROVE SIDEBAR
+========================================================= */
+
 .sidebar {
-    width: 280px;
-    height: 100vh;
+  width: 86px;
+  min-width: 86px;
+  height: 100vh;
 
-    background: #000000;
+  background: #111111;
 
-    display: flex;
-    flex-direction: column;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 
-    padding: 14px;
+  padding: 12px 10px;
 
-    color: white;
+  color: #ffffff;
 
-    border-right: 1px solid #242424;
+  box-sizing: border-box;
+
+  overflow: hidden;
 }
 
-/* ================= Logo ================= */
+/* =========================================================
+   GROVE BRAND
+========================================================= */
 
-.logo {
-    display: flex;
-    align-items: center;
-    gap: 10px;
+.grove-brand {
+  width: 58px;
+  height: 58px;
 
-    height: 56px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 
-    padding: 0 12px;
+  margin-bottom: 14px;
 
-    margin-bottom: 14px;
+  cursor: pointer;
+
+  border-radius: 16px;
+
+  transition:
+    background 0.2s ease,
+    transform 0.2s ease;
 }
 
-.logo-dot {
-    color: #1DB954;
+.grove-brand:hover {
+  background: #1c1c1c;
+
+  transform: scale(1.03);
 }
 
-.logo h2 {
-    color: white;
-    font-size: 24px;
-    font-weight: 700;
+/* =========================================================
+   GROVE LOGO
+========================================================= */
+
+.grove-logo-image {
+  width: 48px;
+  height: 48px;
+
+  object-fit: contain;
+
+  display: block;
 }
 
-/* ================= Navigation ================= */
+/* =========================================================
+   NAVIGATION
+========================================================= */
 
-.menu {
-    display: flex;
-    flex-direction: column;
-    gap: 4px;
+.sidebar-nav {
+  width: 100%;
+
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+
+  gap: 9px;
 }
 
-.menu a {
+/* =========================================================
+   SIDEBAR ITEMS
+========================================================= */
+
+.sidebar-item {
+  width: 58px;
+  height: 58px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  border-radius: 14px;
+
+  color: #a7a7a7;
+
+  text-decoration: none;
+
+  border: none;
+
+  background: transparent;
+
+  cursor: pointer;
+
+  transition:
+    background 0.2s ease,
+    color 0.2s ease,
+    transform 0.2s ease;
+}
+
+.sidebar-item:hover {
+  background: #202020;
+
+  color: #ffffff;
+
+  transform: scale(1.03);
+}
+
+/* =========================================================
+   ACTIVE NAVIGATION
+========================================================= */
+
+.sidebar-item.active {
+  background: linear-gradient(
+    135deg,
+    #714cff,
+    #4b2bdb
+  );
+
+  color: #ffffff;
+
+  box-shadow:
+    0 8px 24px
+    rgba(93, 57, 235, 0.28);
+}
+
+/* =========================================================
+   CREATE PLAYLIST
+========================================================= */
+
+.sidebar-button {
+  margin-top: 3px;
+}
+
+/* =========================================================
+   PLAYLIST AREA
+========================================================= */
+
+.sidebar-playlists {
+  width: 100%;
+
+  flex: 1;
+
+  margin-top: 18px;
+
+  padding-top: 16px;
+
+  border-top:
+    1px solid
+    rgba(255, 255, 255, 0.07);
+
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+
+  gap: 9px;
+
+  overflow-y: auto;
+
+  scrollbar-width: none;
+}
+
+.sidebar-playlists::-webkit-scrollbar {
+  display: none;
+}
+
+/* =========================================================
+   PLAYLIST ICON
+========================================================= */
+
+.playlist-icon {
+  width: 58px;
+  height: 58px;
+
+  flex-shrink: 0;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  border-radius: 14px;
+
+  color: #a7a7a7;
+
+  background: #1b1b1b;
+
+  text-decoration: none;
+
+  transition:
+    background 0.2s ease,
+    color 0.2s ease,
+    transform 0.2s ease;
+}
+
+.playlist-icon:hover {
+  background: #282828;
+
+  color: #ffffff;
+
+  transform: scale(1.03);
+}
+
+.playlist-icon.active {
+  background: #303030;
+
+  color: #ffffff;
+}
+
+/* =========================================================
+   EMPTY PLAYLIST
+========================================================= */
+
+.playlist-empty {
+  opacity: 0.55;
+}
+
+/* =========================================================
+   MOBILE — 450PX AND BELOW
+========================================================= */
+
+@media (max-width: 450px) {
+
+  .sidebar {
+    position: fixed;
+
+    left: 0;
+    bottom: 0;
 
     width: 100%;
-    height: 46px;
+    min-width: 100%;
+
+    height: 64px;
+
+    padding: 0 8px;
+
+    z-index: 1000;
+
+    background: #111111;
+
+    border-top:
+      1px solid
+      rgba(255, 255, 255, 0.08);
 
     display: flex;
+
+    flex-direction: row;
+
     align-items: center;
-    gap: 14px;
 
-    padding: 0 14px;
+    justify-content: center;
+  }
 
-    border-radius: 8px;
+  /* -----------------------------------------
+     HIDE GROVE BRAND ON MOBILE
+  ----------------------------------------- */
 
-    text-decoration: none;
-
-    color: #B3B3B3;
-
-    font-size: 15px;
-    font-weight: 600;
-
-    transition: all .25s ease;
-}
-
-.menu a:hover {
-
-    background: #181818;
-
-    color: white;
-}
-
-.menu a.active {
-
-    background: #1DB954;
-
-    color: white;
-}
-
-/* ================= Divider ================= */
-
-.divider {
-
-    height: 1px;
-
-    background: #242424;
-
-    margin: 18px 0;
-}
-
-/* ================= Library ================= */
-
-.library-title {
-
-    display: flex;
-    align-items: center;
-    gap: 10px;
-
-    padding: 0 14px;
-
-    color: #B3B3B3;
-
-    font-size: 15px;
-    font-weight: 600;
-
-    margin-bottom: 10px;
-}
-
-/* ================= Grove AI ================= */
-
-.grove-ai {
-
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-
-    text-decoration: none;
-
-    height: 46px;
-
-    padding: 0 14px;
-
-    border-radius: 999px;
-
-    background: #181818;
-
-    color: white;
-
-    transition: all .25s ease;
-}
-
-.grove-ai:hover {
-
-    background: #242424;
-}
-
-.grove-ai.active {
-
-    background: #1DB954;
-}
-
-.ai-left {
-
-    display: flex;
-    align-items: center;
-    gap: 10px;
-}
-
-.grove-ai small {
-
-    background: white;
-
-    color: #1DB954;
-
-    padding: 4px 8px;
-
-    border-radius: 999px;
-
-    font-size: 10px;
-
-    font-weight: 700;
-}
-
-/* ================= Playlist ================= */
-
-.playlist-section {
-
-    flex: 1;
-
-    overflow-y: auto;
-
-    scrollbar-width: none;
-
-    -ms-overflow-style: none;
-}
-
-.playlist-section::-webkit-scrollbar {
-
+  .grove-brand {
     display: none;
-}
+  }
 
-.playlist-section h4 {
+  /* -----------------------------------------
+     MAIN NAVIGATION
+  ----------------------------------------- */
 
-    color: #8A8A8A;
-
-    font-size: 12px;
-
-    text-transform: uppercase;
-
-    letter-spacing: 1px;
-
-    margin-bottom: 10px;
-
-    padding: 0 14px;
-}
-
-.playlist-section button {
-
+  .sidebar-nav {
     width: 100%;
-    height: 40px;
+    height: 100%;
 
-    border: none;
+    display: flex;
 
+    flex-direction: row;
+
+    align-items: center;
+
+    justify-content: space-around;
+
+    gap: 0;
+  }
+
+  /* -----------------------------------------
+     NAVIGATION ITEMS
+  ----------------------------------------- */
+
+  .sidebar-item {
+    width: 52px;
+    height: 52px;
+
+    border-radius: 12px;
+
+    flex-shrink: 0;
+  }
+
+  .sidebar-item:hover {
+    transform: none;
+  }
+
+  .sidebar-item.active {
     background: transparent;
 
-    color: #B3B3B3;
+    color: #1ed760;
 
-    text-align: left;
+    box-shadow: none;
+  }
 
-    padding: 0 14px;
+  /* -----------------------------------------
+     CREATE PLAYLIST
+  ----------------------------------------- */
 
-    border-radius: 8px;
+  .sidebar-button {
+    margin-top: 0;
+  }
 
-    cursor: pointer;
+  /* -----------------------------------------
+     PLAYLISTS
+     
+     We don't display the playlist list
+     in the bottom navigation.
+  ----------------------------------------- */
 
-    font-size: 14px;
-
-    transition: all .2s ease;
-}
-
-.playlist-section button:hover {
-
-    background: #181818;
-
-    color: white;
+  .sidebar-playlists {
+    display: none;
+  }
 }

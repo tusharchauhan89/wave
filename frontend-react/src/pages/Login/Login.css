@@ -12,7 +12,7 @@
       rgba(0, 0, 0, 0.85)
     ),
     url("https://images.unsplash.com/photo-1493225457124-a3eb161ffa5f?auto=format&fit=crop&w=1800&q=80")
-      center/cover no-repeat;
+      center / cover no-repeat;
 
   display: flex;
   justify-content: center;
@@ -39,26 +39,39 @@
   background: rgba(18, 18, 18, 0.82);
 
   backdrop-filter: blur(18px);
+  -webkit-backdrop-filter: blur(18px);
 
-  border: 1px solid rgba(255,255,255,.08);
+  border: 1px solid rgba(255, 255, 255, 0.08);
 
   border-radius: 20px;
 
   padding: 40px;
 
   box-shadow:
-    0 15px 50px rgba(0,0,0,.45);
+    0 15px 50px rgba(0, 0, 0, 0.45);
 
-  animation: fadeUp .5s ease;
+  animation: fadeUp 0.5s ease;
 }
+
+/* =========================================
+   GROVE LOGO
+========================================= */
 
 .login-logo {
   text-align: center;
+
   margin-bottom: 30px;
 }
 
-.login-logo svg {
-  color: #1db954;
+.grove-logo-image {
+  width: 75px;
+  height: 75px;
+
+  object-fit: contain;
+
+  display: block;
+
+  margin: 0 auto 10px;
 }
 
 .login-logo h1 {
@@ -71,8 +84,15 @@
 
 .login-logo p {
   color: #b3b3b3;
+
   font-size: 14px;
+
+  margin: 0;
 }
+
+/* =========================================
+   HEADING
+========================================= */
 
 .login-card h2 {
   color: white;
@@ -83,6 +103,10 @@
 
   font-size: 28px;
 }
+
+/* =========================================
+   LABELS
+========================================= */
 
 .login-card label {
   display: block;
@@ -96,6 +120,10 @@
 
   font-weight: 600;
 }
+
+/* =========================================
+   INPUTS
+========================================= */
 
 .login-card input {
   width: 100%;
@@ -116,15 +144,23 @@
 
   outline: none;
 
-  transition: .25s;
+  transition: 0.25s;
+}
+
+.login-card input::placeholder {
+  color: #777;
 }
 
 .login-card input:focus {
   border-color: #1db954;
 
   box-shadow:
-    0 0 0 3px rgba(29,185,84,.18);
+    0 0 0 3px rgba(29, 185, 84, 0.18);
 }
+
+/* =========================================
+   PASSWORD
+========================================= */
 
 .password-box {
   position: relative;
@@ -143,6 +179,7 @@
   transform: translateY(-50%);
 
   background: transparent;
+
   border: none;
 
   color: #b3b3b3;
@@ -150,12 +187,35 @@
   cursor: pointer;
 
   display: flex;
+
   align-items: center;
+
+  justify-content: center;
+
+  padding: 5px;
 }
 
 .password-toggle:hover {
   color: white;
 }
+
+/* =========================================
+   ERROR
+========================================= */
+
+.login-error {
+  color: #ff5a5a;
+
+  margin-top: 12px;
+
+  font-size: 14px;
+
+  text-align: center;
+}
+
+/* =========================================
+   LOGIN BUTTON
+========================================= */
 
 .login-button {
   width: 100%;
@@ -173,11 +233,12 @@
   color: black;
 
   font-size: 16px;
+
   font-weight: 700;
 
   cursor: pointer;
 
-  transition: .25s;
+  transition: 0.25s;
 }
 
 .login-button:hover:not(:disabled) {
@@ -187,19 +248,14 @@
 }
 
 .login-button:disabled {
-  opacity: .7;
+  opacity: 0.7;
+
   cursor: not-allowed;
 }
 
-.login-error {
-  color: #ff5a5a;
-
-  margin-top: 12px;
-
-  font-size: 14px;
-
-  text-align: center;
-}
+/* =========================================
+   FOOTER
+========================================= */
 
 .login-footer {
   margin-top: 28px;
@@ -225,17 +281,27 @@
   text-decoration: underline;
 }
 
+/* =========================================
+   ANIMATION
+========================================= */
+
 @keyframes fadeUp {
   from {
     opacity: 0;
+
     transform: translateY(25px);
   }
 
   to {
     opacity: 1;
+
     transform: translateY(0);
   }
 }
+
+/* =========================================
+   MOBILE
+========================================= */
 
 @media (max-width: 500px) {
   .login-card {
@@ -248,5 +314,10 @@
 
   .login-card h2 {
     font-size: 24px;
+  }
+
+  .grove-logo-image {
+    width: 65px;
+    height: 65px;
   }
 }

@@ -1,20 +1,33 @@
 import "./Sidebar.css";
 import { useEffect, useState } from "react";
+
 import {
-  Circle,
   House,
   Search,
   Library,
   Heart,
   Plus,
-  Mic2,
+  ListMusic,
 } from "lucide-react";
-import { NavLink, useNavigate } from "react-router-dom";
-import { listPlaylists, createPlaylist } from "../../../services/playlist";
-import { isLoggedIn } from "../../../services/auth";
+
+import {
+  NavLink,
+  useNavigate,
+} from "react-router-dom";
+
+import {
+  listPlaylists,
+  createPlaylist,
+} from "../../../services/playlist";
+
+import {
+  isLoggedIn,
+} from "../../../services/auth";
 
 function Sidebar() {
-  const [playlists, setPlaylists] = useState<any[]>([]);
+  const [playlists, setPlaylists] =
+    useState<any[]>([]);
+
   const navigate = useNavigate();
 
   const loadPlaylists = async () => {
@@ -22,11 +35,21 @@ function Sidebar() {
       setPlaylists([]);
       return;
     }
+
     try {
       const data = await listPlaylists();
-      setPlaylists(Array.isArray(data) ? data : []);
+
+      setPlaylists(
+        Array.isArray(data)
+          ? data
+          : []
+      );
     } catch (err) {
-      console.error("playlists load fail", err);
+      console.error(
+        "playlists load fail",
+        err
+      );
+
       setPlaylists([]);
     }
   };
@@ -35,11 +58,21 @@ function Sidebar() {
     loadPlaylists();
   }, []);
 
-  // jab page focus ho / wapas aao to refresh (optional)
   useEffect(() => {
-    const onFocus = () => loadPlaylists();
-    window.addEventListener("focus", onFocus);
-    return () => window.removeEventListener("focus", onFocus);
+    const onFocus = () =>
+      loadPlaylists();
+
+    window.addEventListener(
+      "focus",
+      onFocus
+    );
+
+    return () => {
+      window.removeEventListener(
+        "focus",
+        onFocus
+      );
+    };
   }, []);
 
   const handleCreate = async () => {
@@ -47,104 +80,160 @@ function Sidebar() {
       navigate("/login");
       return;
     }
-    const name = window.prompt("Playlist name");
+
+    const name = window.prompt(
+      "Playlist name"
+    );
+
     if (!name?.trim()) return;
+
     try {
-      const pl = await createPlaylist(name.trim());
+      const pl =
+        await createPlaylist(
+          name.trim()
+        );
+
       if (pl?.id) {
-        setPlaylists((prev) => [pl, ...prev]);
-        navigate(`/playlist/${pl.id}`);
+        setPlaylists((prev) => [
+          pl,
+          ...prev,
+        ]);
+
+        navigate(
+          `/playlist/${pl.id}`
+        );
       }
     } catch (err: any) {
-      alert(err?.response?.data?.detail || "Playlist create fail");
+      alert(
+        err?.response?.data?.detail ||
+          "Playlist create fail"
+      );
     }
   };
 
   return (
     <aside className="sidebar">
-      <div className="logo">
-        <Circle className="logo-dot" size={12} fill="#1DB954" />
-        <h2>Grove</h2>
+
+      {/* =====================================
+          GROVE BRAND
+      ===================================== */}
+
+      <div
+        className="grove-brand"
+        title="Grove"
+        onClick={() =>
+          navigate("/")
+        }
+      >
+        <img
+          src="/grove-logo.png"
+          alt="Grove"
+          className="grove-logo-image"
+        />
       </div>
 
-      <nav className="menu">
-        <NavLink to="/" end>
-          <House size={20} />
-          <span>Home</span>
+      {/* =====================================
+          MAIN NAVIGATION
+      ===================================== */}
+
+      <nav className="sidebar-nav">
+
+        <NavLink
+          to="/"
+          end
+          className="sidebar-item"
+          title="Home"
+        >
+          <House
+            size={22}
+            strokeWidth={2}
+          />
         </NavLink>
 
-        <NavLink to="/search">
-          <Search size={20} />
-          <span>Search</span>
-        </NavLink>
-      </nav>
-
-      <div className="divider"></div>
-
-      
-
-      <nav className="menu">
-        <NavLink to="/library">
-          <Library size={20} />
-          <span>Library</span>
+        <NavLink
+          to="/search"
+          className="sidebar-item"
+          title="Search"
+        >
+          <Search
+            size={22}
+            strokeWidth={2}
+          />
         </NavLink>
 
-        <NavLink to="/liked">
-          <Heart size={20} />
-          <span>Liked Songs</span>
+        <NavLink
+          to="/library"
+          className="sidebar-item"
+          title="Your Library"
+        >
+          <Library
+            size={22}
+            strokeWidth={2}
+          />
         </NavLink>
+
+        <NavLink
+          to="/liked"
+          className="sidebar-item"
+          title="Liked Songs"
+        >
+          <Heart
+            size={22}
+            strokeWidth={2}
+          />
+        </NavLink>
+
+        {/* CREATE PLAYLIST */}
 
         <button
           type="button"
-          className="sidebar-create-btn"
+          className="sidebar-item sidebar-button"
           onClick={handleCreate}
-          style={{
-            display: "flex",
-            alignItems: "center",
-            gap: 12,
-            width: "100%",
-            background: "transparent",
-            border: "none",
-            color: "#b3b3b3",
-            padding: "10px 12px",
-            borderRadius: 8,
-            cursor: "pointer",
-            fontSize: 14,
-            fontFamily: "inherit",
-          }}
+          title="Create Playlist"
         >
-          <Plus size={20} />
-          <span>Create Playlist</span>
+          <Plus
+            size={24}
+            strokeWidth={2}
+          />
         </button>
+
       </nav>
 
-      <div className="divider"></div>
+      {/* =====================================
+          PLAYLISTS
+      ===================================== */}
 
-      
-
-      <div className="divider"></div>
-
-      <div className="playlist-section">
-        <h4>Playlists</h4>
-
-        {!isLoggedIn() && (
-          <p style={{ color: "#666", fontSize: 13, padding: "4px 8px" }}>
-            Login to see playlists
-          </p>
-        )}
-
-        {isLoggedIn() && playlists.length === 0 && (
-          <p style={{ color: "#666", fontSize: 13, padding: "4px 8px" }}>
-            No playlists yet
-          </p>
-        )}
+      <div className="sidebar-playlists">
 
         {playlists.map((pl) => (
-          <NavLink key={pl.id} to={`/playlist/${pl.id}`}>
-            {pl.name}
+          <NavLink
+            key={pl.id}
+            to={`/playlist/${pl.id}`}
+            className="playlist-icon"
+            title={pl.name}
+          >
+            <ListMusic
+              size={21}
+            />
           </NavLink>
         ))}
+
+        {/* Empty playlist indicator */}
+
+        {isLoggedIn() &&
+          playlists.length === 0 && (
+            <div
+              className="playlist-icon playlist-empty"
+              title="No playlists yet"
+            >
+              <ListMusic
+                size={20}
+              />
+            </div>
+          )}
+
       </div>
+
     </aside>
   );
 }

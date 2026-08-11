@@ -1,63 +1,651 @@
 .home-page {
-    display: flex;
-    flex-direction: column;
-    gap: 8px;
-}
+  width: 100%;
+  min-height: 100%;
 
-.recent-section {
-    margin-bottom: 24px;
-}
+  box-sizing: border-box;
 
-.recent-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 12px;
-}
+  padding: 28px 46px 100px;
 
-.recent-header h2 {
-    margin: 0;
-    color: #fff;
-    font-size: 22px;
-    font-weight: 700;
-}
+  color: #ffffff;
 
-.show-all-btn {
-    background: transparent;
-    border: none;
-    color: #b3b3b3;
-    font-size: 13px;
-    font-weight: 600;
-    cursor: pointer;
-    transition: color 0.2s ease;
-}
-
-.show-all-btn:hover {
-    color: #fff;
-}
-
-.recent-empty {
-    color: #888;
-    margin: 8px 0 12px;
-}
-
-.recent-grid {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 16px;
+  background:
+    radial-gradient(
+      ellipse at 50% -20%,
+      rgba(115, 15, 38, 0.55),
+      transparent 55%
+    ),
+    linear-gradient(
+      180deg,
+      #430b1b 0%,
+      #210911 25%,
+      #111111 55%,
+      #111111 100%
+    );
 }
 
 
-/* Phone */
+/* ================================
+   TOP
+================================ */
+
+.home-top {
+  display: flex;
+  flex-direction: column;
+
+  gap: 18px;
+
+  margin-bottom: 20px;
+}
+
+
+/* ================================
+   FILTERS
+================================ */
+
+.home-filters {
+  display: flex;
+  align-items: center;
+
+  gap: 8px;
+}
+
+.home-filter {
+  border: none;
+
+  height: 36px;
+
+  padding: 0 17px;
+
+  border-radius: 999px;
+
+  background: rgba(255, 255, 255, 0.1);
+
+  color: #ffffff;
+
+  font-size: 13px;
+  font-weight: 600;
+
+  cursor: pointer;
+}
+
+.home-filter:hover {
+  background: rgba(255, 255, 255, 0.18);
+}
+
+.home-filter.active {
+  background: #ffffff;
+
+  color: #111111;
+}
+
+
+/* ================================
+   QUICK ACCESS
+================================ */
+
+.quick-access-section {
+  width: 100%;
+
+  margin-bottom: 28px;
+}
+
+.quick-access-grid {
+  display: grid;
+
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+
+  gap: 10px;
+}
+
+.quick-access-card {
+  width: 100%;
+
+  height: 64px;
+
+  padding: 0 14px;
+
+  box-sizing: border-box;
+
+  display: flex;
+  align-items: center;
+
+  gap: 12px;
+
+  border: none;
+
+  border-radius: 7px;
+
+  background: rgba(255, 255, 255, 0.1);
+
+  color: #ffffff;
+
+  cursor: pointer;
+
+  text-align: left;
+
+  transition:
+    background 0.2s ease,
+    transform 0.2s ease;
+}
+
+.quick-access-card:hover {
+  background: rgba(255, 255, 255, 0.18);
+
+  transform: translateY(-1px);
+}
+
+
+/* ICON */
+
+.quick-access-icon {
+  width: 44px;
+  height: 44px;
+
+  flex-shrink: 0;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  border-radius: 6px;
+
+  background: #303030;
+
+  color: #ffffff;
+}
+
+.quick-access-card.liked
+.quick-access-icon {
+  background: linear-gradient(
+    135deg,
+    #7357ff,
+    #9a4cff
+  );
+}
+
+.quick-access-card.playlist
+.quick-access-icon {
+  background: linear-gradient(
+    135deg,
+    #18b86b,
+    #087d4c
+  );
+}
+
+.quick-access-card.recent
+.quick-access-icon {
+  background: linear-gradient(
+    135deg,
+    #8b2d42,
+    #4b1c28
+  );
+}
+
+.quick-access-card.made
+.quick-access-icon {
+  background: #333333;
+}
+
+
+/* TEXT */
+
+.quick-access-text {
+  min-width: 0;
+
+  display: flex;
+  flex-direction: column;
+
+  gap: 3px;
+}
+
+.quick-access-text strong {
+  color: #ffffff;
+
+  font-size: 14px;
+  font-weight: 700;
+
+  white-space: nowrap;
+}
+
+.quick-access-text span {
+  color: #a7a7a7;
+
+  font-size: 11px;
+
+  white-space: nowrap;
+
+  overflow: hidden;
+
+  text-overflow: ellipsis;
+}
+
+
+/* PLAY */
+
+.quick-access-play {
+  width: 34px;
+  height: 34px;
+
+  margin-left: auto;
+
+  flex-shrink: 0;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  border-radius: 50%;
+
+  background: #1ed760;
+
+  color: #000000;
+
+  opacity: 0;
+
+  transition: opacity 0.2s ease;
+}
+
+.quick-access-card:hover
+.quick-access-play {
+  opacity: 1;
+}
+
+
+/* ================================
+   SECTIONS
+================================ */
+
+.home-section {
+  width: 100%;
+
+  margin-bottom: 30px;
+}
+
+.home-section-header {
+  display: flex;
+
+  align-items: flex-end;
+
+  justify-content: space-between;
+
+  margin-bottom: 14px;
+}
+
+.home-section-header h2 {
+  margin: 0;
+
+  color: #ffffff;
+
+  font-size: 23px;
+
+  font-weight: 800;
+
+  line-height: 1.2;
+}
+
+.section-subtitle {
+  margin: 6px 0 0;
+
+  color: #a7a7a7;
+
+  font-size: 13px;
+}
+
+.home-show-all {
+  border: none;
+
+  background: transparent;
+
+  color: #a7a7a7;
+
+  font-size: 12px;
+
+  font-weight: 700;
+
+  cursor: pointer;
+}
+
+.home-show-all:hover {
+  color: #ffffff;
+
+  text-decoration: underline;
+}
+
+
+/* ================================
+   RECENT SONGS
+================================ */
+
+.home-song-row {
+  width: 100%;
+
+  display: flex;
+
+  gap: 14px;
+
+  overflow-x: auto;
+
+  padding-bottom: 8px;
+
+  scrollbar-width: none;
+}
+
+.home-song-row::-webkit-scrollbar {
+  display: none;
+}
+
+
+/* ================================
+   EMPTY STATE
+================================ */
+
+.empty-home-state {
+  width: 100%;
+
+  min-height: 90px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  gap: 10px;
+
+  border-radius: 8px;
+
+  background: rgba(255, 255, 255, 0.04);
+
+  color: #888888;
+
+  font-size: 13px;
+}
+
+
+/* ================================
+   RESPONSIVE
+================================ */
+
+@media (max-width: 850px) {
+  .home-page {
+    padding: 24px;
+  }
+
+  .quick-access-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 600px) {
+  .home-page {
+    padding: 20px 16px 90px;
+  }
+
+  .home-section-header h2 {
+    font-size: 20px;
+  }
+}
+/* =========================================================
+   MOBILE — 450PX AND BELOW
+========================================================= */
 
 @media (max-width: 450px) {
-    .recent-header h2 {
-        font-size: 18px;
-    }
-    .show-all-btn {
-        font-size: 12px;
-    }
-    .recent-grid {
-        gap: 10px;
-    }
+
+  .home-page {
+    width: 100%;
+    min-width: 0;
+
+    box-sizing: border-box;
+
+    /*
+      60px Topbar
+      72px Player
+      64px Bottom Sidebar
+      Extra breathing room
+    */
+    padding:
+      16px
+      12px
+      215px;
+
+    overflow-x: hidden;
+  }
+
+  /* =======================================================
+     TOP
+  ======================================================= */
+
+  .home-top {
+    width: 100%;
+
+    gap: 14px;
+
+    margin-bottom: 18px;
+  }
+
+  /* =======================================================
+     FILTERS
+  ======================================================= */
+
+  .home-filters {
+    width: 100%;
+
+    gap: 7px;
+
+    overflow-x: auto;
+
+    scrollbar-width: none;
+
+    padding-bottom: 2px;
+  }
+
+  .home-filters::-webkit-scrollbar {
+    display: none;
+  }
+
+  .home-filter {
+    height: 34px;
+
+    flex-shrink: 0;
+
+    padding: 0 15px;
+
+    font-size: 12px;
+  }
+
+  /* =======================================================
+     QUICK ACCESS
+  ======================================================= */
+
+  .quick-access-section {
+    width: 100%;
+
+    margin-bottom: 24px;
+  }
+
+  .quick-access-grid {
+    width: 100%;
+
+    display: grid;
+
+    grid-template-columns:
+      repeat(2, minmax(0, 1fr));
+
+    gap: 8px;
+  }
+
+  .quick-access-card {
+    width: 100%;
+
+    min-width: 0;
+
+    height: 58px;
+
+    padding: 0 9px;
+
+    gap: 8px;
+
+    border-radius: 8px;
+  }
+
+  .quick-access-icon {
+    width: 36px;
+    height: 36px;
+
+    min-width: 36px;
+  }
+
+  .quick-access-icon svg {
+    width: 18px;
+    height: 18px;
+  }
+
+  .quick-access-text {
+    min-width: 0;
+
+    overflow: hidden;
+
+    gap: 2px;
+  }
+
+  .quick-access-text strong {
+    max-width: 100%;
+
+    font-size: 11px;
+
+    overflow: hidden;
+
+    text-overflow: ellipsis;
+
+    white-space: nowrap;
+  }
+
+  .quick-access-text span {
+    max-width: 100%;
+
+    font-size: 9px;
+  }
+
+  /*
+    Hide the green play button on phones.
+    The card itself remains clickable.
+  */
+  .quick-access-play {
+    display: none;
+  }
+
+  /* =======================================================
+     HOME SECTIONS
+  ======================================================= */
+
+  .home-section {
+    width: 100%;
+
+    min-width: 0;
+
+    margin-bottom: 24px;
+
+    overflow: hidden;
+  }
+
+  .home-section-header {
+    width: 100%;
+
+    min-width: 0;
+
+    align-items: flex-end;
+
+    margin-bottom: 12px;
+
+    gap: 10px;
+  }
+
+  .home-section-header > div {
+    min-width: 0;
+  }
+
+  .home-section-header h2 {
+    font-size: 18px;
+
+    line-height: 1.25;
+  }
+
+  .section-subtitle {
+    margin-top: 4px;
+
+    font-size: 11px;
+
+    white-space: nowrap;
+
+    overflow: hidden;
+
+    text-overflow: ellipsis;
+  }
+
+  .home-show-all {
+    flex-shrink: 0;
+
+    font-size: 11px;
+  }
+
+  /* =======================================================
+     RECENT SONGS
+  ======================================================= */
+
+  .home-song-row {
+    width: 100%;
+
+    display: flex;
+
+    gap: 10px;
+
+    overflow-x: auto;
+
+    overflow-y: hidden;
+
+    padding-bottom: 8px;
+
+    scrollbar-width: none;
+
+    -webkit-overflow-scrolling: touch;
+  }
+
+  .home-song-row::-webkit-scrollbar {
+    display: none;
+  }
+
+  /*
+    Important:
+    Song cards should NOT shrink inside
+    the horizontal scrolling row.
+  */
+
+  .home-song-row > * {
+    flex-shrink: 0;
+  }
+
+  /* =======================================================
+     EMPTY STATE
+  ======================================================= */
+
+  .empty-home-state {
+    width: 100%;
+
+    min-height: 80px;
+
+    padding: 16px;
+
+    box-sizing: border-box;
+
+    gap: 8px;
+
+    text-align: center;
+
+    font-size: 11px;
+  }
+
+  .empty-home-state svg {
+    flex-shrink: 0;
+
+    width: 21px;
+    height: 21px;
+  }
 }

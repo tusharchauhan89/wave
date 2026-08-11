@@ -9,7 +9,12 @@ import {
   type ReactNode,
 } from "react";
 
-import { getSong, getBestStreamUrl, addHistory } from "../services/music";
+import {
+  getSong,
+  getBestStreamUrl,
+  addHistory,
+} from "../services/music";
+
 export interface SongImage {
   quality: string;
   url: string;
@@ -48,7 +53,10 @@ export interface Song {
   [key: string]: unknown;
 }
 
-export type RepeatMode = "off" | "all" | "one";
+export type RepeatMode =
+  | "off"
+  | "all"
+  | "one";
 
 interface PlayerContextValue {
   audio: HTMLAudioElement | null;
@@ -65,7 +73,7 @@ interface PlayerContextValue {
   repeat: RepeatMode;
 
   volume: number;
- progress: number;
+  progress: number;
   duration: number;
   buffered: number;
   playbackRate: number;
@@ -159,6 +167,10 @@ export function PlayerProvider({
 }: {
   children: ReactNode;
 }) {
+  /* =====================================================
+     AUDIO
+  ===================================================== */
+
   const audioRef =
     useRef<HTMLAudioElement | null>(
       null
@@ -174,6 +186,10 @@ export function PlayerProvider({
 
   const audio =
     audioRef.current;
+
+  /* =====================================================
+     PERSISTED SETTINGS
+  ===================================================== */
 
   const persisted =
     useMemo<PersistedState>(() => {
@@ -202,6 +218,10 @@ export function PlayerProvider({
         return DEFAULT_STATE;
       }
     }, []);
+
+  /* =====================================================
+     STATE
+  ===================================================== */
 
   const [queue, setQueue] =
     useState<Song[]>([]);
@@ -278,8 +298,34 @@ export function PlayerProvider({
         null
       : null;
 
+  /* =====================================================
+     REFS
+
+     These always contain the latest queue/index.
+  ===================================================== */
+
+  const queueRef =
+    useRef<Song[]>([]);
+
+  const currentIndexRef =
+    useRef(-1);
+
   const shuffledHistory =
     useRef<number[]>([]);
+
+  useEffect(() => {
+    queueRef.current =
+      queue;
+  }, [queue]);
+
+  useEffect(() => {
+    currentIndexRef.current =
+      currentIndex;
+  }, [currentIndex]);
+
+  /* =====================================================
+     AUDIO SETTINGS
+  ===================================================== */
 
   useEffect(() => {
     audio.volume = volume;
@@ -293,6 +339,10 @@ export function PlayerProvider({
     playbackRate,
   ]);
 
+  /* =====================================================
+     SAVE SETTINGS
+  ===================================================== */
+
   useEffect(() => {
     if (
       typeof window ===
@@ -301,18 +351,15 @@ export function PlayerProvider({
       return;
     }
 
-    const state: PersistedState =
-      {
+    localStorage.setItem(
+      STORAGE_KEY,
+      JSON.stringify({
         volume,
         muted: isMuted,
         shuffle,
         repeat,
         playbackRate,
-      };
-
-    localStorage.setItem(
-      STORAGE_KEY,
-      JSON.stringify(state)
+      })
     );
   }, [
     volume,
@@ -322,35 +369,90 @@ export function PlayerProvider({
     playbackRate,
   ]);
 
-const loadSong = useCallback(async (song: Song) => {
-  let streamUrl = getBestStreamUrl(song);
+  /* =====================================================
+     LOAD SONG
+  ===================================================== */
 
-  if (!streamUrl && song.id) {
-    try {
-      const full = await getSong(song.id);
-      streamUrl = getBestStreamUrl(full);
-      if (full.downloadUrl) song.downloadUrl = full.downloadUrl;
-      if (full.image) song.image = full.image;
-      if (full.artists) song.artists = full.artists;
-      if (full.name) song.name = full.name;
-    } catch (err) {
-      console.error("Failed to resolve stream URL", err);
-    }
-  }
+  const loadSong =
+    useCallback(
+      async (song: Song) => {
+        let streamUrl =
+          getBestStreamUrl(song);
 
-  if (!streamUrl) throw new Error("Audio stream URL not found.");
+        if (
+          !streamUrl &&
+          song.id
+        ) {
+          try {
+            const full =
+              await getSong(song.id);
 
-  if (audio.src !== streamUrl) {
-    audio.pause();
-    audio.src = streamUrl;
-    audio.load();
-    setProgress(0);
-    setDuration(0);
-    setBuffered(0);
-  }
+            streamUrl =
+              getBestStreamUrl(full);
 
-  void addHistory(song);
-}, [audio]);
+            if (
+              full.downloadUrl
+            ) {
+              song.downloadUrl =
+                full.downloadUrl;
+            }
+
+            if (full.image) {
+              song.image =
+                full.image;
+            }
+
+            if (full.artists) {
+              song.artists =
+                full.artists;
+            }
+
+            if (full.name) {
+              song.name =
+                full.name;
+            }
+          } catch (error) {
+            console.error(
+              "Failed to resolve stream URL",
+              error
+            );
+          }
+        }
+
+        if (!streamUrl) {
+          throw new Error(
+            "Audio stream URL not found."
+          );
+        }
+
+        /*
+         * Force the exact selected
+         * stream into the audio element.
+         */
+
+        if (
+          audio.src !== streamUrl
+        ) {
+          audio.pause();
+
+          audio.src =
+            streamUrl;
+
+          audio.load();
+
+          setProgress(0);
+          setDuration(0);
+          setBuffered(0);
+        }
+
+        void addHistory(song);
+      },
+      [audio]
+    );
+
+  /* =====================================================
+     PLAY
+  ===================================================== */
 
   const play =
     useCallback(
@@ -360,26 +462,28 @@ const loadSong = useCallback(async (song: Song) => {
 
           await audio.play();
 
-          setIsPlaying(
-            true
-          );
+          setIsPlaying(true);
         } finally {
-          setIsLoading(
-            false
-          );
+          setIsLoading(false);
         }
       },
       [audio]
     );
 
+  /* =====================================================
+     PAUSE
+  ===================================================== */
+
   const pause =
     useCallback(() => {
       audio.pause();
 
-      setIsPlaying(
-        false
-      );
+      setIsPlaying(false);
     }, [audio]);
+
+  /* =====================================================
+     TOGGLE PLAY
+  ===================================================== */
 
   const togglePlay =
     useCallback(
@@ -397,264 +501,609 @@ const loadSong = useCallback(async (song: Song) => {
         play,
       ]
     );
-      const playSong = useCallback(
-    async (
-      song: Song,
-      songsQueue?: Song[],
-      autoplay = true
-    ) => {
-      let index = currentIndex;
 
-      if (songsQueue) {
-        setQueue(songsQueue);
+  /* =====================================================
+     ROTATE QUEUE
 
-        index = songsQueue.findIndex(
-          (item) => item.id === song.id
-        );
+     This is the important function.
 
-        setCurrentIndex(index);
-      } else {
-        index = queue.findIndex(
-          (item) => item.id === song.id
-        );
+     Original:
+       A B C D E
 
-        if (index === -1) {
-          const nextQueue = [
-            ...queue,
-            song,
-          ];
+     Selected:
+       B
 
-          setQueue(nextQueue);
+     Result:
+       B C D E A
 
-          index =
-            nextQueue.length - 1;
+     Selected:
+       D
+
+     Result:
+       D E A B C
+  ===================================================== */
+
+  const rotateQueue =
+    useCallback(
+      (
+        songs: Song[],
+        selectedId: string
+      ): Song[] => {
+        if (!songs.length) {
+          return [];
         }
 
-        setCurrentIndex(index);
-      }
-
-      await loadSong(song);
-
-      setProgress(0);
-
-      if (autoplay) {
-        await play();
-      }
-    },
-    [
-      currentIndex,
-      queue,
-      loadSong,
-      play,
-    ]
-  );
-
-  const playQueue = useCallback(
-    async (
-      songs: Song[],
-      startIndex = 0
-    ) => {
-      if (!songs.length) {
-        return;
-      }
-
-      setQueue(songs);
-
-      setCurrentIndex(startIndex);
-
-      await loadSong(
-        songs[startIndex]
-      );
-
-      await play();
-    },
-    [
-      loadSong,
-      play,
-    ]
-  );
-
-  const getNextIndex =
-    useCallback(() => {
-      if (!queue.length) {
-        return -1;
-      }
-
-      if (repeat === "one") {
-        return currentIndex;
-      }
-
-      if (shuffle) {
-        if (queue.length === 1) {
-          return 0;
-        }
-
-        const available: number[] =
-          [];
-
-        for (
-          let i = 0;
-          i < queue.length;
-          i++
-        ) {
-          if (
-            i !== currentIndex
-          ) {
-            available.push(i);
-          }
-        }
-
-        const random =
-          available[
-            Math.floor(
-              Math.random() *
-                available.length
-            )
-          ];
-
-        shuffledHistory.current.push(
-          currentIndex
-        );
-
-        return random;
-      }
-
-      const next =
-        currentIndex + 1;
-
-      if (next < queue.length) {
-        return next;
-      }
-
-      if (repeat === "all") {
-        return 0;
-      }
-
-      return -1;
-    }, [
-      currentIndex,
-      queue,
-      repeat,
-      shuffle,
-    ]);
-
-  const getPreviousIndex =
-    useCallback(() => {
-      if (!queue.length) {
-        return -1;
-      }
-
-      if (shuffle) {
-        const previous =
-          shuffledHistory.current.pop();
+        const selectedIndex =
+          songs.findIndex(
+            (song) =>
+              song.id ===
+              selectedId
+          );
 
         if (
-          previous !== undefined
+          selectedIndex === -1
         ) {
-          return previous;
+          return songs;
         }
-      }
 
-      if (currentIndex > 0) {
-        return currentIndex - 1;
-      }
+        return [
+          ...songs.slice(
+            selectedIndex
+          ),
+          ...songs.slice(
+            0,
+            selectedIndex
+          ),
+        ];
+      },
+      []
+    );
 
-      if (repeat === "all") {
-        return (
-          queue.length - 1
+  /* =====================================================
+     PLAY SONG
+
+     IMPORTANT:
+
+     Whenever the user manually selects
+     a song, that song becomes position 0.
+
+     This means the queue itself becomes:
+
+       B C D E A
+
+     instead of:
+
+       A B C D E
+  ===================================================== */
+
+  const playSong =
+    useCallback(
+      async (
+        song: Song,
+        songsQueue?: Song[],
+        autoplay = true
+      ) => {
+        let sourceQueue =
+          songsQueue
+            ? [...songsQueue]
+            : [...queueRef.current];
+
+        /*
+         * If there is no existing queue,
+         * create one containing the song.
+         */
+
+        if (
+          !sourceQueue.length
+        ) {
+          sourceQueue = [
+            song,
+          ];
+        }
+
+        /*
+         * Make the clicked song
+         * the FIRST item.
+         */
+
+        const rotatedQueue =
+          rotateQueue(
+            sourceQueue,
+            song.id
+          );
+
+        /*
+         * If the clicked song wasn't
+         * found, keep it in queue.
+         */
+
+        const finalQueue =
+          rotatedQueue.some(
+            (item) =>
+              item.id ===
+              song.id
+          )
+            ? rotatedQueue
+            : [
+                song,
+                ...rotatedQueue,
+              ];
+
+        /*
+         * CURRENT SONG IS ALWAYS INDEX 0
+         */
+
+        const newIndex = 0;
+
+        /*
+         * Update refs immediately.
+         */
+
+        queueRef.current =
+          finalQueue;
+
+        currentIndexRef.current =
+          newIndex;
+
+        /*
+         * Update React state.
+         */
+
+        setQueue(
+          finalQueue
         );
-      }
 
-      return currentIndex;
-    }, [
-      currentIndex,
-      queue,
-      repeat,
-      shuffle,
-    ]);
+        setCurrentIndex(
+          newIndex
+        );
 
-  const next =
-    useCallback(async () => {
-      const nextIndex =
-        getNextIndex();
+        shuffledHistory.current =
+          [];
 
-      if (nextIndex === -1) {
-        pause();
+        /*
+         * Play the EXACT selected
+         * song object.
+         */
 
-        audio.currentTime = 0;
+        await loadSong(
+          finalQueue[0]
+        );
 
         setProgress(0);
 
-        return;
-      }
+        if (autoplay) {
+          await play();
+        }
+      },
+      [
+        rotateQueue,
+        loadSong,
+        play,
+      ]
+    );
 
-      setCurrentIndex(
-        nextIndex
-      );
+  /* =====================================================
+     PLAY QUEUE
 
-      const song =
-        queue[nextIndex];
+     startIndex song becomes index 0
+     and the rest follows circularly.
+  ===================================================== */
 
-      await loadSong(song);
+  const playQueue =
+    useCallback(
+      async (
+        songs: Song[],
+        startIndex = 0
+      ) => {
+        if (!songs.length) {
+          return;
+        }
 
-      await play();
-    }, [
-      audio,
-      getNextIndex,
-      loadSong,
-      pause,
-      play,
-      queue,
-    ]);
+        const safeIndex =
+          clamp(
+            startIndex,
+            0,
+            songs.length - 1
+          );
+
+        const selected =
+          songs[safeIndex];
+
+        const rotatedQueue =
+          rotateQueue(
+            songs,
+            selected.id
+          );
+
+        queueRef.current =
+          rotatedQueue;
+
+        currentIndexRef.current =
+          0;
+
+        setQueue(
+          rotatedQueue
+        );
+
+        setCurrentIndex(0);
+
+        shuffledHistory.current =
+          [];
+
+        await loadSong(
+          rotatedQueue[0]
+        );
+
+        await play();
+      },
+      [
+        rotateQueue,
+        loadSong,
+        play,
+      ]
+    );
+
+  /* =====================================================
+     NEXT
+
+     NOW THIS IS EXTREMELY SIMPLE.
+
+     Queue:
+       B C D E A
+
+     currentIndex:
+       0
+
+     Next:
+       queue[1] = C
+
+     After C:
+
+       C D E A B
+
+     currentIndex:
+       0
+
+     Next:
+       D
+  ===================================================== */
+
+  const next =
+    useCallback(
+      async () => {
+        const activeQueue =
+          queueRef.current;
+
+        if (
+          !activeQueue.length
+        ) {
+          return;
+        }
+
+        const activeIndex =
+          currentIndexRef.current;
+
+        /*
+         * Repeat One
+         */
+
+        if (
+          repeat === "one"
+        ) {
+          await loadSong(
+            activeQueue[
+              activeIndex
+            ]
+          );
+
+          await play();
+
+          return;
+        }
+
+        /*
+         * Shuffle
+         */
+
+        if (shuffle) {
+          if (
+            activeQueue.length ===
+            1
+          ) {
+            return;
+          }
+
+          const available =
+            activeQueue
+              .map(
+                (_, index) =>
+                  index
+              )
+              .filter(
+                (index) =>
+                  index !==
+                  activeIndex
+              );
+
+          const randomIndex =
+            Math.floor(
+              Math.random() *
+                available.length
+            );
+
+          const selectedIndex =
+            available[
+              randomIndex
+            ];
+
+          shuffledHistory.current.push(
+            activeIndex
+          );
+
+          const shuffledSong =
+            activeQueue[
+              selectedIndex
+            ];
+
+          /*
+           * Rotate the queue around
+           * the newly selected song.
+           */
+
+          const rotatedQueue =
+            rotateQueue(
+              activeQueue,
+              shuffledSong.id
+            );
+
+          queueRef.current =
+            rotatedQueue;
+
+          currentIndexRef.current =
+            0;
+
+          setQueue(
+            rotatedQueue
+          );
+
+          setCurrentIndex(0);
+
+          await loadSong(
+            rotatedQueue[0]
+          );
+
+          await play();
+
+          return;
+        }
+
+        /*
+         * NORMAL NEXT
+         *
+         * Because the current song
+         * is ALWAYS index 0:
+         *
+         * next = index 1
+         */
+
+        if (
+          activeQueue.length === 1
+        ) {
+          await loadSong(
+            activeQueue[0]
+          );
+
+          await play();
+
+          return;
+        }
+
+        const nextSong =
+          activeQueue[1];
+
+        if (!nextSong) {
+          return;
+        }
+
+        /*
+         * Rotate around the next song.
+         *
+         * Example:
+         *
+         * B C D E A
+         *
+         * Next = C
+         *
+         * New queue:
+         *
+         * C D E A B
+         */
+
+        const rotatedQueue =
+          rotateQueue(
+            activeQueue,
+            nextSong.id
+          );
+
+        queueRef.current =
+          rotatedQueue;
+
+        currentIndexRef.current =
+          0;
+
+        setQueue(
+          rotatedQueue
+        );
+
+        setCurrentIndex(0);
+
+        await loadSong(
+          rotatedQueue[0]
+        );
+
+        setProgress(0);
+
+        await play();
+      },
+      [
+        repeat,
+        shuffle,
+        rotateQueue,
+        loadSong,
+        play,
+      ]
+    );
+
+  /* =====================================================
+     PREVIOUS
+
+     Current:
+       C D E A B
+
+     Previous:
+       B
+
+     New queue:
+       B C D E A
+  ===================================================== */
 
   const previous =
-    useCallback(async () => {
-      if (
-        audio.currentTime > 5
-      ) {
-        audio.currentTime = 0;
-        return;
-      }
+    useCallback(
+      async () => {
+        if (
+          audio.currentTime > 5
+        ) {
+          audio.currentTime = 0;
 
-      const previousIndex =
-        getPreviousIndex();
+          return;
+        }
 
-      if (
-        previousIndex === -1
-      ) {
-        return;
-      }
+        const activeQueue =
+          queueRef.current;
 
-      setCurrentIndex(
-        previousIndex
-      );
+        if (
+          !activeQueue.length
+        ) {
+          return;
+        }
 
-      const song =
-        queue[previousIndex];
+        /*
+         * Shuffle history
+         */
 
-      await loadSong(song);
+        if (shuffle) {
+          const previousIndex =
+            shuffledHistory.current.pop();
 
-      await play();
-    }, [
-      audio,
-      getPreviousIndex,
-      loadSong,
-      play,
-      queue,
-    ]);
-      const seek = useCallback(
-    (time: number) => {
-      audio.currentTime = clamp(
-        time,
-        0,
-        duration || 0
-      );
-    },
-    [
-      audio,
-      duration,
-    ]
-  );
+          if (
+            previousIndex !==
+            undefined
+          ) {
+            const previousSong =
+              activeQueue[
+                previousIndex
+              ];
+
+            const rotatedQueue =
+              rotateQueue(
+                activeQueue,
+                previousSong.id
+              );
+
+            queueRef.current =
+              rotatedQueue;
+
+            currentIndexRef.current =
+              0;
+
+            setQueue(
+              rotatedQueue
+            );
+
+            setCurrentIndex(0);
+
+            await loadSong(
+              rotatedQueue[0]
+            );
+
+            await play();
+
+            return;
+          }
+        }
+
+        /*
+         * Because current song is index 0,
+         * previous is the LAST song.
+         */
+
+        const previousSong =
+          activeQueue[
+            activeQueue.length - 1
+          ];
+
+        if (!previousSong) {
+          return;
+        }
+
+        const rotatedQueue =
+          rotateQueue(
+            activeQueue,
+            previousSong.id
+          );
+
+        queueRef.current =
+          rotatedQueue;
+
+        currentIndexRef.current =
+          0;
+
+        setQueue(
+          rotatedQueue
+        );
+
+        setCurrentIndex(0);
+
+        await loadSong(
+          rotatedQueue[0]
+        );
+
+        setProgress(0);
+
+        await play();
+      },
+      [
+        audio,
+        shuffle,
+        rotateQueue,
+        loadSong,
+        play,
+      ]
+    );
+
+  /* =====================================================
+     SEEK
+  ===================================================== */
+
+  const seek =
+    useCallback(
+      (time: number) => {
+        audio.currentTime =
+          clamp(
+            time,
+            0,
+            duration || 0
+          );
+      },
+      [
+        audio,
+        duration,
+      ]
+    );
+
+  /* =====================================================
+     VOLUME
+  ===================================================== */
 
   const setVolume =
     useCallback(
@@ -683,9 +1132,14 @@ const loadSong = useCallback(async (song: Song) => {
   const toggleMute =
     useCallback(() => {
       setMuted(
-        (prev) => !prev
+        (previous) =>
+          !previous
       );
     }, []);
+
+  /* =====================================================
+     SHUFFLE
+  ===================================================== */
 
   const toggleShuffle =
     useCallback(() => {
@@ -693,27 +1147,41 @@ const loadSong = useCallback(async (song: Song) => {
         [];
 
       setShuffle(
-        (prev) => !prev
+        (previous) =>
+          !previous
       );
     }, []);
+
+  /* =====================================================
+     REPEAT
+  ===================================================== */
 
   const cycleRepeat =
     useCallback(() => {
       setRepeat(
-        (prev) => {
-          switch (prev) {
-            case "off":
-              return "all";
-
-            case "all":
-              return "one";
-
-            default:
-              return "off";
+        (previous) => {
+          if (
+            previous ===
+            "off"
+          ) {
+            return "all";
           }
+
+          if (
+            previous ===
+            "all"
+          ) {
+            return "one";
+          }
+
+          return "off";
         }
       );
     }, []);
+
+  /* =====================================================
+     PLAYBACK RATE
+  ===================================================== */
 
   const setPlaybackRate =
     useCallback(
@@ -729,88 +1197,123 @@ const loadSong = useCallback(async (song: Song) => {
       []
     );
 
+  /* =====================================================
+     ADD TO QUEUE
+  ===================================================== */
+
   const addToQueue =
     useCallback(
       (song: Song) => {
         setQueue(
-          (prev) => [
-            ...prev,
-            song,
-          ]
+          (previous) => {
+            const updated = [
+              ...previous,
+              song,
+            ];
+
+            queueRef.current =
+              updated;
+
+            return updated;
+          }
         );
       },
       []
     );
 
+  /* =====================================================
+     ADD NEXT
+  ===================================================== */
+
   const addNext =
     useCallback(
       (song: Song) => {
         setQueue(
-          (prev) => {
-            if (
-              currentIndex < 0
-            ) {
-              return [
-                ...prev,
-                song,
-              ];
-            }
-
-            const copy = [
-              ...prev,
+          (previous) => {
+            const updated = [
+              ...previous,
             ];
 
-            copy.splice(
-              currentIndex + 1,
-              0,
-              song
-            );
+            const index =
+              currentIndexRef.current;
 
-            return copy;
+            if (
+              index < 0
+            ) {
+              updated.push(song);
+            } else {
+              updated.splice(
+                index + 1,
+                0,
+                song
+              );
+            }
+
+            queueRef.current =
+              updated;
+
+            return updated;
           }
         );
       },
-      [currentIndex]
+      []
     );
+
+  /* =====================================================
+     REMOVE FROM QUEUE
+  ===================================================== */
 
   const removeFromQueue =
     useCallback(
       (index: number) => {
         setQueue(
-          (prev) => {
-            const copy = [
-              ...prev,
+          (previous) => {
+            const updated = [
+              ...previous,
             ];
 
-            copy.splice(
-              index,
-              1
-            );
+            if (
+              index >= 0 &&
+              index <
+                updated.length
+            ) {
+              updated.splice(
+                index,
+                1
+              );
+            }
 
-            return copy;
+            queueRef.current =
+              updated;
+
+            return updated;
           }
         );
 
+        const activeIndex =
+          currentIndexRef.current;
+
         if (
           index <
-          currentIndex
+          activeIndex
         ) {
+          const newIndex =
+            activeIndex - 1;
+
+          currentIndexRef.current =
+            newIndex;
+
           setCurrentIndex(
-            (prev) =>
-              prev - 1
+            newIndex
           );
-        } else if (
-          index ===
-          currentIndex
-        ) {
-          pause();
         }
       },
-      [
-        currentIndex,
-        pause,
-      ]
+      []
     );
+
+  /* =====================================================
+     MOVE QUEUE ITEM
+  ===================================================== */
 
   const moveQueueItem =
     useCallback(
@@ -819,43 +1322,60 @@ const loadSong = useCallback(async (song: Song) => {
         to: number
       ) => {
         setQueue(
-          (prev) => {
-            const copy = [
-              ...prev,
+          (previous) => {
+            const updated = [
+              ...previous,
             ];
 
+            if (
+              from < 0 ||
+              from >=
+                updated.length ||
+              to < 0 ||
+              to >=
+                updated.length
+            ) {
+              return previous;
+            }
+
             const [item] =
-              copy.splice(
+              updated.splice(
                 from,
                 1
               );
 
-            copy.splice(
+            updated.splice(
               to,
               0,
               item
             );
 
-            return copy;
+            queueRef.current =
+              updated;
+
+            return updated;
           }
         );
 
         if (
-          currentIndex ===
+          currentIndexRef.current ===
           from
         ) {
-          setCurrentIndex(
-            to
-          );
+          currentIndexRef.current =
+            to;
+
+          setCurrentIndex(to);
         }
       },
-      [currentIndex]
+      []
     );
+
+  /* =====================================================
+     CLEAR QUEUE
+  ===================================================== */
 
   const clearQueue =
     useCallback(() => {
-      pause();
-
       audio.pause();
 
       audio.removeAttribute(
@@ -864,9 +1384,17 @@ const loadSong = useCallback(async (song: Song) => {
 
       audio.load();
 
+      queueRef.current =
+        [];
+
+      currentIndexRef.current =
+        -1;
+
       setQueue([]);
 
       setCurrentIndex(-1);
+
+      setIsPlaying(false);
 
       setProgress(0);
 
@@ -876,10 +1404,11 @@ const loadSong = useCallback(async (song: Song) => {
 
       shuffledHistory.current =
         [];
-    }, [
-      audio,
-      pause,
-    ]);
+    }, [audio]);
+
+  /* =====================================================
+     AUDIO EVENTS
+  ===================================================== */
 
   useEffect(() => {
     const handlePlay = () => {
@@ -897,9 +1426,7 @@ const loadSong = useCallback(async (song: Song) => {
 
     const handlePlaying =
       () => {
-        setIsLoading(
-          false
-        );
+        setIsLoading(false);
       };
 
     const handleLoadedMetadata =
@@ -920,13 +1447,12 @@ const loadSong = useCallback(async (song: Song) => {
       () => {
         try {
           if (
-            audio.buffered
-              .length
+            audio.buffered.length
           ) {
             setBuffered(
               audio.buffered.end(
-                audio.buffered
-                  .length - 1
+                audio.buffered.length -
+                  1
               )
             );
           }
@@ -934,9 +1460,11 @@ const loadSong = useCallback(async (song: Song) => {
           setBuffered(0);
         }
       };
-          const handleEnded = async () => {
-      await next();
-    };
+
+    const handleEnded =
+      async () => {
+        await next();
+      };
 
     audio.addEventListener(
       "play",
@@ -1023,6 +1551,10 @@ const loadSong = useCallback(async (song: Song) => {
     audio,
     next,
   ]);
+
+  /* =====================================================
+     CONTEXT VALUE
+  ===================================================== */
 
   const value =
     useMemo<PlayerContextValue>(

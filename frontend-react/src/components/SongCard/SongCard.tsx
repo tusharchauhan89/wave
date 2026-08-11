@@ -1,13 +1,28 @@
 import "./SongCard.css";
 import { useState } from "react";
-import { Play, Heart, ListPlus } from "lucide-react";
+import {
+  Play,
+  Heart,
+  ListPlus,
+} from "lucide-react";
+
 import { usePlayer } from "../../context/PlayerContext";
 import { likeSong } from "../../services/music";
-import { listPlaylists, addSongToPlaylist } from "../../services/playlist";
+import {
+  listPlaylists,
+  addSongToPlaylist,
+} from "../../services/playlist";
 import { isLoggedIn } from "../../services/auth";
 
-function SongCard({ song, queue }: { song: any; queue: any[] }) {
+function SongCard({
+  song,
+  queue,
+}: {
+  song: any;
+  queue: any[];
+}) {
   const { playSong } = usePlayer();
+
   const [menuOpen, setMenuOpen] = useState(false);
   const [playlists, setPlaylists] = useState<any[]>([]);
   const [loadingPl, setLoadingPl] = useState(false);
@@ -16,132 +31,241 @@ function SongCard({ song, queue }: { song: any; queue: any[] }) {
     song?.image?.[2]?.url ||
     song?.image?.[1]?.url ||
     song?.image?.[0]?.url ||
-    "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Crect fill='%23333' width='160' height='160'/%3E%3C/svg%3E";
+    "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='300' height='300'%3E%3Crect fill='%23202020' width='300' height='300'/%3E%3Ctext x='50%25' y='50%25' dominant-baseline='middle' text-anchor='middle' fill='%23888' font-size='70'%3E♪%3C/text%3E%3C/svg%3E";
 
   const artist =
-    song?.artists?.primary?.map((a: any) => a.name).join(", ") ||
-    "Unknown";
+    song?.artists?.primary
+      ?.map((a: any) => a.name)
+      .join(", ") ||
+    "Unknown Artist";
 
-  const onPlay = (e: React.MouseEvent) => {
+  const songName =
+    song?.name ||
+    "Unknown Song";
+
+  /* =====================================================
+     PLAY
+     ===================================================== */
+
+  const onPlay = (
+    e: React.MouseEvent
+  ) => {
     e.stopPropagation();
-    playSong(song, queue).catch(console.error);
+
+    playSong(song, queue).catch(
+      console.error
+    );
   };
 
-  const onLike = async (e: React.MouseEvent) => {
+
+  /* =====================================================
+     LIKE
+     ===================================================== */
+
+  const onLike = async (
+    e: React.MouseEvent
+  ) => {
     e.stopPropagation();
+
     if (!isLoggedIn()) {
       alert("Pehle login karo");
       return;
     }
+
     try {
       await likeSong(song);
-      alert("Liked");
     } catch (err: any) {
-      alert(err?.response?.data?.detail || "Like fail");
+      alert(
+        err?.response?.data?.detail ||
+          "Like fail"
+      );
     }
   };
 
-  const onAddClick = async (e: React.MouseEvent) => {
+
+  /* =====================================================
+     ADD TO PLAYLIST
+     ===================================================== */
+
+  const onAddClick = async (
+    e: React.MouseEvent
+  ) => {
     e.stopPropagation();
+
     if (!isLoggedIn()) {
       alert("Pehle login karo");
       return;
     }
+
     setLoadingPl(true);
+
     try {
       const list = await listPlaylists();
-      setPlaylists(Array.isArray(list) ? list : []);
+
+      setPlaylists(
+        Array.isArray(list)
+          ? list
+          : []
+      );
+
       setMenuOpen(true);
+
       if (!list?.length) {
-        alert("Pehle Library se playlist banao");
+        alert(
+          "Pehle Library se playlist banao"
+        );
       }
     } catch (err: any) {
       console.error(err);
-      alert(err?.response?.data?.detail || "Playlists load nahi hui (login check karo)");
+
+      alert(
+        err?.response?.data?.detail ||
+          "Playlists load nahi hui"
+      );
+
       setMenuOpen(false);
     } finally {
       setLoadingPl(false);
     }
   };
 
-  const addTo = async (playlistId: string) => {
+
+  /* =====================================================
+     ADD SONG
+     ===================================================== */
+
+  const addTo = async (
+    playlistId: string
+  ) => {
     try {
-      await addSongToPlaylist(playlistId, song);
+      await addSongToPlaylist(
+        playlistId,
+        song
+      );
+
       setMenuOpen(false);
+
       alert("Added to playlist");
     } catch (err: any) {
-      alert(err?.response?.data?.detail || "Add fail");
+      alert(
+        err?.response?.data?.detail ||
+          "Add fail"
+      );
     }
   };
 
+
   return (
-    <div className="song-card">
+    <article className="song-card">
+
+      {/* ALBUM ART */}
+
       <div className="song-image">
-        <img src={image} alt={song?.name || ""} />
-        <button type="button" className="play-button" onClick={onPlay}>
-          <Play size={22} fill="black" />
+
+        <img
+          src={image}
+          alt={songName}
+          loading="lazy"
+        />
+
+        <button
+          type="button"
+          className="play-button"
+          onClick={onPlay}
+          aria-label={`Play ${songName}`}
+        >
+          <Play
+            size={20}
+            fill="currentColor"
+          />
         </button>
+
       </div>
+
+
+      {/* SONG INFORMATION */}
 
       <div className="song-info">
-        <h3>{song?.name || "Unknown"}</h3>
-        <p>{artist}</p>
+
+        <h3 title={songName}>
+          {songName}
+        </h3>
+
+        <p title={artist}>
+          {artist}
+        </p>
+
       </div>
 
-      <div style={{ display: "flex", gap: 8, marginTop: 6 }}>
-        <button type="button" onClick={onLike} title="Like">
+
+      {/* CARD ACTIONS */}
+
+      <div className="song-actions">
+
+        <button
+          type="button"
+          onClick={onLike}
+          title="Like song"
+          className="song-action-btn"
+        >
           <Heart size={16} />
         </button>
-        <button type="button" onClick={onAddClick} title="Add to playlist" disabled={loadingPl}>
+
+        <button
+          type="button"
+          onClick={onAddClick}
+          title="Add to playlist"
+          className="song-action-btn"
+          disabled={loadingPl}
+        >
           <ListPlus size={16} />
         </button>
+
       </div>
 
+
+      {/* PLAYLIST MENU */}
+
       {menuOpen && (
-        <div
-          style={{
-            marginTop: 8,
-            background: "#282828",
-            borderRadius: 8,
-            padding: 8,
-          }}
-        >
-          {playlists.map((pl) => (
-            <button
-              key={pl.id}
-              type="button"
-              onClick={() => addTo(pl.id)}
-              style={{
-                display: "block",
-                width: "100%",
-                textAlign: "left",
-                background: "none",
-                border: "none",
-                color: "#fff",
-                padding: "8px",
-                cursor: "pointer",
-              }}
-            >
-              {pl.name}
-            </button>
-          ))}
+        <div className="playlist-menu">
+
+          <div className="playlist-menu-title">
+            Add to playlist
+          </div>
+
+          {playlists.length > 0 ? (
+            playlists.map((pl) => (
+              <button
+                key={pl.id}
+                type="button"
+                className="playlist-menu-item"
+                onClick={() =>
+                  addTo(pl.id)
+                }
+              >
+                {pl.name}
+              </button>
+            ))
+          ) : (
+            <div className="playlist-empty">
+              No playlists available
+            </div>
+          )}
+
           <button
             type="button"
-            onClick={() => setMenuOpen(false)}
-            style={{
-              width: "100%",
-              background: "none",
-              border: "none",
-              color: "#888",
-              padding: 6,
-              cursor: "pointer",
-            }}
+            className="playlist-close"
+            onClick={() =>
+              setMenuOpen(false)
+            }
           >
             Close
           </button>
+
         </div>
       )}
-    </div>
+
+    </article>
   );
 }
 
