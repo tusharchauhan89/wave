@@ -6,6 +6,7 @@ import { Link, useNavigate } from "react-router-dom";
 import {
   Eye,
   EyeOff,
+  Music,
 } from "lucide-react";
 
 import { login } from "../../services/auth";
@@ -34,13 +35,12 @@ function Login() {
     e.preventDefault();
 
     setLoading(true);
+
     setError("");
 
     try {
       await login(email, password);
 
-      // After successful login,
-      // go to the Grove home page.
       navigate("/");
     } catch (err: any) {
       setError(
@@ -61,11 +61,7 @@ function Login() {
 
           <div className="login-logo">
 
-            <img
-              src="/grove-logo.png"
-              alt="Grove"
-              className="grove-logo-image"
-            />
+            <Music size={46} />
 
             <h1>Grove</h1>
 
@@ -82,7 +78,6 @@ function Login() {
           <form
             onSubmit={handleSubmit}
           >
-
             <label>
               Email
             </label>
@@ -159,9 +154,7 @@ function Login() {
 
           <div className="login-footer">
 
-            <span>
-              Don't have an account?
-            </span>
+            Don't have an account?
 
             <Link to="/register">
               Sign Up
