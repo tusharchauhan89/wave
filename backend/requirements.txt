@@ -8,3 +8,4 @@ python-multipart==0.0.9
 jose==1.0.0
 PyJWT==2.9.0
 pycryptodome==3.21.0
+email-validator
