@@ -6,7 +6,7 @@ import { likeSong, getRelatedSongs } from "../../services/music";
 import { listPlaylists, addSongToPlaylist } from "../../services/playlist";
 import { isLoggedIn } from "../../services/auth";
 
-function SongCard({ song }: { song: any }) {
+function SongCard({ song, queue }: { song: any; queue?: any[] }) {
   const { playSong, addToQueue } = usePlayer();
   const [menuOpen, setMenuOpen] = useState(false);
   const [playlists, setPlaylists] = useState<any[]>([]);

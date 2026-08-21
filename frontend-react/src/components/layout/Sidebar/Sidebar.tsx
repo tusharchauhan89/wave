@@ -13,7 +13,7 @@ import { isLoggedIn } from "../../../services/auth";
 import groveLogo from "../../../assets/image.png"; // check path
 
 function Sidebar() {
-  const [playlists, setPlaylists] = useState<any[]>([]);
+  const [, setPlaylists] = useState<any[]>([]);
   const navigate = useNavigate();
 
   const loadPlaylists = async () => {

@@ -10,6 +10,7 @@ export interface Playlist {
   user_id?: string;
   created_at?: string;
   songs?: any[];
+  cover?: string;
 }
 
 export async function listPlaylists(): Promise<Playlist[]> {

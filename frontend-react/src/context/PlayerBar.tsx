@@ -12,7 +12,7 @@ import {
   Heart,
   MoreHorizontal,
 } from "lucide-react";
-import { usePlayer } from "../../context/PlayerContext";
+import { usePlayer } from "./PlayerContext";
 import "./Player.css";
 
 function formatTime(sec: number) {

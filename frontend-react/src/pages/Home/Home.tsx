@@ -13,7 +13,7 @@ const PREVIEW_COUNT = 6;
 function Home() {
   const navigate = useNavigate();
   const [recent, setRecent] = useState<any[]>([]);
-  const [likedCount, setLikedCount] = useState(0);
+  const [, setLikedCount] = useState(0);
   const [showAllRecent, setShowAllRecent] = useState(false);
   const [activeTab, setActiveTab] = useState<"all" | "music">("all");
 
@@ -141,7 +141,7 @@ function Home() {
 
       {/* ===== Music Rows (scroll target) ===== */}
       <div ref={musicRowsRef} className="music-rows-section">
-        <MusicRow title="It's New Music Friday!" query="new hindi songs 2024" />
+        <MusicRow title=" Top Weekend played!" query="new hindi songs 2024" />
         <MusicRow title="Made For You" query="trending hindi songs" />
         <MusicRow title="Trending Now" query="top hindi songs" />
       </div>
