@@ -397,57 +397,36 @@ const loadSong = useCallback(async (song: Song) => {
         play,
       ]
     );
-      const playSong = useCallback(
-    async (
-      song: Song,
-      songsQueue?: Song[],
-      autoplay = true
-    ) => {
-      let index = currentIndex;
+  const playSong = useCallback(
+   async (
+    song: Song,
+    songsQueue?: Song[],
+    autoplay = true
+  ) => {
+    let index = 0;
 
-      if (songsQueue) {
-        setQueue(songsQueue);
+    if (songsQueue && songsQueue.length > 0) {
+      // Album / Playlist se play → di hui queue use karo
+      setQueue(songsQueue);
+      index = songsQueue.findIndex((item) => item.id === song.id);
+      if (index === -1) index = 0;
+      setCurrentIndex(index);
+    } else {
+      // Search se single song → sirf yeh song queue mein rakho
+      setQueue([song]);
+      setCurrentIndex(0);
+      index = 0;
+    }
 
-        index = songsQueue.findIndex(
-          (item) => item.id === song.id
-        );
+    await loadSong(song);
+    setProgress(0);
 
-        setCurrentIndex(index);
-      } else {
-        index = queue.findIndex(
-          (item) => item.id === song.id
-        );
-
-        if (index === -1) {
-          const nextQueue = [
-            ...queue,
-            song,
-          ];
-
-          setQueue(nextQueue);
-
-          index =
-            nextQueue.length - 1;
-        }
-
-        setCurrentIndex(index);
-      }
-
-      await loadSong(song);
-
-      setProgress(0);
-
-      if (autoplay) {
-        await play();
-      }
-    },
-    [
-      currentIndex,
-      queue,
-      loadSong,
-      play,
-    ]
-  );
+    if (autoplay) {
+      await play();
+    }
+  },
+  [loadSong, play]
+);
 
   const playQueue = useCallback(
     async (

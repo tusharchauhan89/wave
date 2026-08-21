@@ -1,6 +1,7 @@
 import "./Topbar.css";
 import { useState, useEffect, useRef } from "react";
 import { useNavigate } from "react-router-dom";
+import NovaChat from "../../NovaChat/NovaChat";
 import {
   ChevronLeft,
   ChevronRight,
@@ -31,6 +32,8 @@ function Topbar() {
   const [query, setQuery] = useState("");
   const { listening, status, statusKind, toggle } = useVoice();
 
+  const [novaOpen, setNovaOpen] = useState(false);
+
   const [notifications, setNotifications] = useState<Notification[]>([]);
   const [showNotifications, setShowNotifications] = useState(false);
   const [listeningMinutes, setListeningMinutes] = useState(0);
@@ -50,7 +53,7 @@ function Topbar() {
         );
         const minutes = Math.floor(totalSeconds / 60);
         setListeningMinutes(minutes);
-        setIsPremium(minutes >= 60);
+        setIsPremium(minutes >= 50); // 50 minutes unlock
       } catch (err) {
         console.error("Failed to fetch history", err);
       }
@@ -58,14 +61,14 @@ function Topbar() {
 
     fetchListeningTime();
 
-    // Har 30 second me refresh (real-time feel)
+    // Refresh every 30 seconds
     const interval = setInterval(fetchListeningTime, 30000);
     return () => clearInterval(interval);
   }, []);
 
   // Premium unlock notification
   useEffect(() => {
-    if (!isLoggedIn() || listeningMinutes < 60) return;
+    if (!isLoggedIn() || listeningMinutes < 50) return;
 
     const alreadyNotified = localStorage.getItem("premium_unlocked");
     if (!alreadyNotified) {
@@ -73,9 +76,7 @@ function Topbar() {
         {
           id: Date.now(),
           title: "🎉 Premium Unlocked!",
-          message: `Congratulations! You've listened for ${Math.floor(
-            listeningMinutes / 60
-          )}h ${listeningMinutes % 60}m and became a Premium User.`,
+          message: `Congratulations! You've listened for ${listeningMinutes} min and became a Premium User.`,
           type: "premium",
           time: "Just now",
           read: false,
@@ -104,13 +105,17 @@ function Topbar() {
     };
 
     window.addEventListener("grove-notification", handleNotification);
-    return () => window.removeEventListener("grove-notification", handleNotification);
+    return () =>
+      window.removeEventListener("grove-notification", handleNotification);
   }, []);
 
   // Close on outside click
   useEffect(() => {
     const handleClickOutside = (e: MouseEvent) => {
-      if (dropdownRef.current && !dropdownRef.current.contains(e.target as Node)) {
+      if (
+        dropdownRef.current &&
+        !dropdownRef.current.contains(e.target as Node)
+      ) {
         setShowNotifications(false);
       }
     };
@@ -119,8 +124,8 @@ function Topbar() {
   }, []);
 
   const unreadCount = notifications.filter((n) => !n.read).length;
-  const progressPercent = Math.min((listeningMinutes / 60) * 100, 100);
-  const minutesLeft = Math.max(60 - listeningMinutes, 0);
+  const progressPercent = Math.min((listeningMinutes / 50) * 100, 100);
+  const minutesLeft = Math.max(50 - listeningMinutes, 0);
 
   const markAllRead = () => {
     setNotifications((prev) => prev.map((n) => ({ ...n, read: true })));
@@ -140,10 +145,18 @@ function Topbar() {
     <header className="topbar">
       {/* Left */}
       <div className="topbar-left">
-        <button className="circle-btn" onClick={() => navigate(-1)} type="button">
+        <button
+          className="circle-btn"
+          onClick={() => navigate(-1)}
+          type="button"
+        >
           <ChevronLeft size={20} />
         </button>
-        <button className="circle-btn" onClick={() => navigate(1)} type="button">
+        <button
+          className="circle-btn"
+          onClick={() => navigate(1)}
+          type="button"
+        >
           <ChevronRight size={20} />
         </button>
       </div>
@@ -169,6 +182,17 @@ function Topbar() {
 
       {/* Right */}
       <div className="topbar-right">
+        {/* Nova AI Button */}
+        <button
+          className="nova-btn"
+          type="button"
+          onClick={() => setNovaOpen(true)}
+          title="Grove AI"
+        >
+          <span className="nova-icon">✦</span>
+          Nova
+        </button>
+
         <div className="notification-wrapper" ref={dropdownRef}>
           <button
             className="notification-btn"
@@ -193,9 +217,11 @@ function Topbar() {
                 )}
               </div>
 
-              {/* ═══════ MILESTONE / PROGRESS CARD ═══════ */}
+              {/* Milestone / Progress Card */}
               {isLoggedIn() && (
-                <div className={`milestone-card ${isPremium ? "unlocked" : ""}`}>
+                <div
+                  className={`milestone-card ${isPremium ? "unlocked" : ""}`}
+                >
                   {isPremium ? (
                     <>
                       <div className="milestone-icon premium">
@@ -204,7 +230,7 @@ function Topbar() {
                       <div className="milestone-content">
                         <p className="milestone-title">Premium Unlocked 🎉</p>
                         <p className="milestone-desc">
-                          You've reached 1 hour of listening time
+                          You've reached 50 minutes of listening time
                         </p>
                       </div>
                     </>
@@ -214,11 +240,10 @@ function Topbar() {
                         <Clock size={20} />
                       </div>
                       <div className="milestone-content">
-                        <p className="milestone-title">
-                          Premium Progress
-                        </p>
+                        <p className="milestone-title">Premium Progress</p>
                         <p className="milestone-desc">
-                          {listeningMinutes} min listened • {minutesLeft} min left
+                          {listeningMinutes} min listened • {minutesLeft} min
+                          left
                         </p>
                         <div className="progress-bar">
                           <div
@@ -244,7 +269,9 @@ function Topbar() {
                   notifications.map((n) => (
                     <div
                       key={n.id}
-                      className={`notification-item ${n.type} ${n.read ? "read" : ""}`}
+                      className={`notification-item ${n.type} ${
+                        n.read ? "read" : ""
+                      }`}
                     >
                       <div className="notification-icon">
                         {n.type === "premium" ? (
@@ -273,26 +300,27 @@ function Topbar() {
         </div>
 
         <button
-  className="profile-btn"
-  type="button"
-  onClick={() => navigate(isLoggedIn() ? "/profile" : "/login")}
->
-  <div className="profile-info">
-    <span className="profile-name">{getDisplayName()}</span>
-    {isPremium && (
-      <span className="topbar-premium-badge">
-        <Star size={11} fill="currentColor" />
-        Premium
-      </span>
-    )}
-  </div>
-  <ChevronDown size={18} />
-</button>
+          className="profile-btn"
+          type="button"
+          onClick={() => navigate(isLoggedIn() ? "/profile" : "/login")}
+        >
+          <div className="profile-info">
+            <span
+              className={`profile-name ${isPremium ? "premium-name" : ""}`}
+            >
+              {getDisplayName()}
+            </span>
+          </div>
+          <ChevronDown size={18} />
+        </button>
       </div>
 
       {status && (
         <div className={`voice-status-toast ${statusKind}`}>{status}</div>
       )}
+
+      {/* Nova AI Panel */}
+      <NovaChat open={novaOpen} onClose={() => setNovaOpen(false)} />
     </header>
   );
 }

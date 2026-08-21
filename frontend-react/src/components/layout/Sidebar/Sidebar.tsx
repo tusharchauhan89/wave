@@ -1,17 +1,16 @@
 import "./Sidebar.css";
 import { useEffect, useState } from "react";
 import {
-  Circle,
   House,
   Search,
-  Library,
   Heart,
   Plus,
-  Mic2,
+  Library,
 } from "lucide-react";
 import { NavLink, useNavigate } from "react-router-dom";
 import { listPlaylists, createPlaylist } from "../../../services/playlist";
 import { isLoggedIn } from "../../../services/auth";
+import groveLogo from "../../../assets/image.png"; // check path
 
 function Sidebar() {
   const [playlists, setPlaylists] = useState<any[]>([]);
@@ -35,7 +34,6 @@ function Sidebar() {
     loadPlaylists();
   }, []);
 
-  // jab page focus ho / wapas aao to refresh (optional)
   useEffect(() => {
     const onFocus = () => loadPlaylists();
     window.addEventListener("focus", onFocus);
@@ -62,89 +60,55 @@ function Sidebar() {
 
   return (
     <aside className="sidebar">
+      {/* Logo */}
       <div className="logo">
-        <Circle className="logo-dot" size={12} fill="#1DB954" />
-        <h2>Grove</h2>
+        <img src={groveLogo} alt="GROOVE" className="logo-img" />
       </div>
 
+      {/* Icons */}
       <nav className="menu">
-        <NavLink to="/" end>
-          <House size={20} />
-          <span>Home</span>
+        <NavLink
+          to="/"
+          end
+          className={({ isActive }) => `nav-item ${isActive ? "active" : ""}`}
+          title="Home"
+        >
+          <House size={24} />
         </NavLink>
 
-        <NavLink to="/search">
-          <Search size={20} />
-          <span>Search</span>
-        </NavLink>
-      </nav>
-
-      <div className="divider"></div>
-
-      
-
-      <nav className="menu">
-        <NavLink to="/library">
-          <Library size={20} />
-          <span>Library</span>
+        <NavLink
+          to="/search"
+          className={({ isActive }) => `nav-item ${isActive ? "active" : ""}`}
+          title="Search"
+        >
+          <Search size={24} />
         </NavLink>
 
-        <NavLink to="/liked">
-          <Heart size={20} />
-          <span>Liked Songs</span>
+        <NavLink
+          to="/liked"
+          className={({ isActive }) => `nav-item ${isActive ? "active" : ""}`}
+          title="Liked Songs"
+        >
+          <Heart size={24} />
         </NavLink>
 
         <button
           type="button"
-          className="sidebar-create-btn"
+          className="nav-item"
           onClick={handleCreate}
-          style={{
-            display: "flex",
-            alignItems: "center",
-            gap: 12,
-            width: "100%",
-            background: "transparent",
-            border: "none",
-            color: "#b3b3b3",
-            padding: "10px 12px",
-            borderRadius: 8,
-            cursor: "pointer",
-            fontSize: 14,
-            fontFamily: "inherit",
-          }}
+          title="Create Playlist"
         >
-          <Plus size={20} />
-          <span>Create Playlist</span>
+          <Plus size={24} />
         </button>
+
+        <NavLink
+          to="/library"
+          className={({ isActive }) => `nav-item ${isActive ? "active" : ""}`}
+          title="Library"
+        >
+          <Library size={22} />
+        </NavLink>
       </nav>
-
-      <div className="divider"></div>
-
-      
-
-      <div className="divider"></div>
-
-      <div className="playlist-section">
-        <h4>Playlists</h4>
-
-        {!isLoggedIn() && (
-          <p style={{ color: "#666", fontSize: 13, padding: "4px 8px" }}>
-            Login to see playlists
-          </p>
-        )}
-
-        {isLoggedIn() && playlists.length === 0 && (
-          <p style={{ color: "#666", fontSize: 13, padding: "4px 8px" }}>
-            No playlists yet
-          </p>
-        )}
-
-        {playlists.map((pl) => (
-          <NavLink key={pl.id} to={`/playlist/${pl.id}`}>
-            {pl.name}
-          </NavLink>
-        ))}
-      </div>
     </aside>
   );
 }

@@ -60,35 +60,7 @@ function Layout() {
         }}
       />
 
-      <button
-        className="floating-ai"
-        onClick={() => setChatOpen(true)}
-        style={{
-          position: "fixed",
-          right: showNowPlaying ? 388 : 28,
-          bottom: 100,
-          height: 56,
-          padding: "0 22px",
-          border: "none",
-          borderRadius: 999,
-          background: "#1DB954",
-          color: "white",
-          display: "flex",
-          alignItems: "center",
-          gap: 10,
-          fontSize: 15,
-          fontWeight: 700,
-          cursor: "pointer",
-          zIndex: 999,
-          boxShadow: "0 10px 30px rgba(29,185,84,.35)",
-          transition: "right 0.28s ease",
-        }}
-      >
-        <Sparkles size={20} />
-        <span>Nova</span>
-      </button>
-
-      <NovaChat open={chatOpen} onClose={() => setChatOpen(false)} />
+      
     </div>
   );
 }

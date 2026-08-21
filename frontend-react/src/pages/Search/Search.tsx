@@ -57,7 +57,11 @@ function Search() {
       {!loading && songs.length > 0 && (
         <div className="search-grid">
           {songs.map((s) => (
-            <SongCard key={s.id} song={s} queue={songs} />
+            <SongCard 
+              key={s.id} 
+              song={s} 
+              queue={songs}   // ← yeh sahi hai
+            />
           ))}
         </div>
       )}

@@ -1,117 +1,181 @@
+/* ================= BASE ================= */
+
 .topbar {
-    height: 80px;
+    height: 64px;
     display: flex;
     align-items: center;
-    justify-content: space-between;
-    gap: 24px;
-    padding: 0 30px;
+    gap: 12px;
+    padding: 0 16px;
     background: #121212;
     border-bottom: 1px solid #222;
 }
 
 
-/* ================= LEFT ================= */
+/* LEFT */
 
 .topbar-left {
     display: flex;
     align-items: center;
-    gap: 12px;
+    gap: 8px;
+    flex-shrink: 0;
 }
 
 .circle-btn {
-    width: 42px;
-    height: 42px;
+    width: 36px;
+    height: 36px;
     border: none;
     border-radius: 50%;
     background: #000;
-    color: white;
+    color: #fff;
     display: flex;
-    justify-content: center;
     align-items: center;
+    justify-content: center;
     cursor: pointer;
-    transition: .25s ease;
+    transition: 0.2s ease;
 }
 
 .circle-btn:hover {
-    background: #1DB954;
+    background: #1db954;
 }
 
 
-/* ================= SEARCH ================= */
+/* SEARCH */
 
 .search-container {
     flex: 1;
-    max-width: 620px;
-    height: 48px;
+    height: 42px;
     background: #242424;
-    border-radius: 999px;
+    border-radius: 50px;
     display: flex;
     align-items: center;
-    gap: 14px;
-    padding: 0 18px;
-    transition: .25s ease;
+    gap: 10px;
+    padding: 0 14px;
+    min-width: 0;
 }
 
 .search-container:focus-within {
-    border: 2px solid #1DB954;
+    border: 2px solid #1db954;
 }
 
 .search-container svg {
-    color: #B3B3B3;
+    color: #b3b3b3;
+    flex-shrink: 0;
 }
 
 .search-container input {
     flex: 1;
-    background: none;
     border: none;
     outline: none;
-    color: white;
-    font-size: 15px;
+    background: transparent;
+    color: #fff;
+    font-size: 14px;
+    min-width: 0;
 }
 
 .search-container input::placeholder {
-    color: #B3B3B3;
+    color: #b3b3b3;
 }
 
 
-/* ================= RIGHT ================= */
+/* Desktop Nova Button */
+
+.nova-btn {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    height: 36px;
+    padding: 0 14px;
+    background: #1a1a1a;
+    border: 1px solid #333;
+    border-radius: 50px;
+    color: #fff;
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+    white-space: nowrap;
+    transition: 0.2s ease;
+}
+
+.nova-btn:hover {
+    background: #252525;
+}
+
+.nova-icon {
+    font-size: 14px;
+    line-height: 1;
+}
+
+
+/* Mobile Nova (inside search bar) */
+
+.nova-btn-mobile {
+    display: none;
+    background: transparent;
+    border: none;
+    color: #e2e8f0;
+    cursor: pointer;
+    padding: 4px;
+    border-radius: 50%;
+    font-size: 16px;
+    line-height: 1;
+}
+
+.nova-btn-mobile:hover {
+    color: #fff;
+    background: #333;
+}
+
+
+/* RIGHT */
 
 .topbar-right {
     display: flex;
     align-items: center;
-    gap: 16px;
+    gap: 8px;
+    flex-shrink: 0;
 }
 
 
 /* Notification */
 
+.notification-wrapper {
+    position: relative;
+}
+
 .notification-btn {
-    width: 42px;
-    height: 42px;
+    width: 36px;
+    height: 36px;
     border: none;
     border-radius: 50%;
-    background: #000;
-    color: white;
+    background: #1a1a1a;
+    color: #fff;
     display: flex;
-    justify-content: center;
     align-items: center;
+    justify-content: center;
     cursor: pointer;
     position: relative;
-    transition: .25s ease;
+    transition: 0.2s ease;
 }
 
 .notification-btn:hover {
-    background: #1DB954;
+    background: #2a2a2a;
 }
 
 .notification-dot {
     position: absolute;
-    top: 10px;
-    right: 10px;
-    width: 8px;
-    height: 8px;
-    background: #1DB954;
+    top: 4px;
+    right: 4px;
+    min-width: 16px;
+    height: 16px;
+    background: #1db954;
+    color: #000;
+    font-size: 10px;
+    font-weight: 700;
     border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0 3px;
 }
 
 
@@ -120,76 +184,57 @@
 .profile-btn {
     display: flex;
     align-items: center;
-    gap: 10px;
+    gap: 6px;
+    height: 36px;
+    padding: 0 12px;
     border: none;
-    background: #000;
-    color: white;
-    border-radius: 999px;
-    padding: 8px 16px;
+    background: #1a1a1a;
+    color: #fff;
+    border-radius: 50px;
     cursor: pointer;
-    transition: .25s ease;
+    transition: 0.2s ease;
 }
 
 .profile-btn:hover {
-    background: #242424;
-}
-
-.profile-info {
-    display: flex;
-    align-items: center;
+    background: #2a2a2a;
 }
 
 .profile-name {
-    font-size: 15px;
+    font-size: 13px;
     font-weight: 600;
-    color: white;
-    letter-spacing: .3px;
 }
 
-.profile-btn svg:last-child {
-    color: #B3B3B3;
-    transition: .25s;
+.profile-name.premium-name {
+    color: #fbbf24;
 }
 
-.profile-btn:hover svg:last-child {
-    color: white;
-}
+
+/* Voice */
 
 .voice-btn {
     background: transparent;
     border: none;
     color: #b3b3b3;
     cursor: pointer;
-    padding: 6px;
+    padding: 4px;
     border-radius: 50%;
     display: flex;
     align-items: center;
     justify-content: center;
-    transition: all 0.2s ease;
 }
 
 .voice-btn:hover {
     color: #fff;
-    background: #282828;
+    background: #333;
 }
 
 .voice-btn.listening {
     color: #fff;
     background: #1db954;
-    animation: pulse-mic 1s infinite;
 }
 
-@keyframes pulse-mic {
-    0% {
-        box-shadow: 0 0 0 0 rgba(29, 185, 84, 0.5);
-    }
-    70% {
-        box-shadow: 0 0 0 10px rgba(29, 185, 84, 0);
-    }
-    100% {
-        box-shadow: 0 0 0 0 rgba(29, 185, 84, 0);
-    }
-}
+
+/* Toast */
 
 .voice-status-toast {
     position: fixed;
@@ -202,7 +247,6 @@
     border-radius: 20px;
     font-size: 13px;
     z-index: 2000;
-    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4);
 }
 
 .voice-status-toast.listen {
@@ -214,143 +258,21 @@
     background: #e91429;
 }
 
-@media (max-width: 450px) {
-    .topbar {
-        height: 56px;
-        padding: 0 10px;
-        gap: 8px;
-    }
-    .circle-btn {
-        width: 36px;
-        height: 36px;
-    }
-    .search-container {
-        height: 40px;
-        max-width: none;
-        padding: 0 12px;
-        gap: 8px;
-    }
-    .search-container input {
-        font-size: 13px;
-    }
-    .topbar-right {
-        gap: 6px;
-    }
-    .notification-btn {
-        width: 36px;
-        height: 36px;
-    }
-    .profile-btn {
-        padding: 6px 10px;
-    }
-    .profile-name {
-        display: none;
-        /* sirf icon dikhao */
-    }
-}
 
-@media (max-width: 450px) {
-    .topbar {
-        height: 56px;
-        padding: 0 10px;
-        gap: 8px;
-    }
-    .topbar-left .circle-btn:last-child {
-        display: none;
-        /* forward button hide */
-    }
-    .circle-btn {
-        width: 34px;
-        height: 34px;
-    }
-    .search-container {
-        height: 38px;
-        max-width: none;
-        flex: 1;
-        padding: 0 12px;
-        gap: 8px;
-    }
-    .search-container input {
-        font-size: 13px;
-    }
-    .profile-name {
-        display: none;
-    }
-    .profile-btn {
-        padding: 6px 8px;
-    }
-}
-
-
-/* ═══════ NOTIFICATION SYSTEM ═══════ */
-
-.notification-wrapper {
-    position: relative;
-}
-
-.notification-btn {
-    position: relative;
-    background: #222;
-    border: none;
-    color: #fff;
-    width: 40px;
-    height: 40px;
-    border-radius: 50%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    cursor: pointer;
-    transition: background 0.2s;
-}
-
-.notification-btn:hover {
-    background: #333;
-}
-
-.notification-dot {
-    position: absolute;
-    top: 6px;
-    right: 6px;
-    min-width: 16px;
-    height: 16px;
-    background: #1db954;
-    color: #000;
-    font-size: 10px;
-    font-weight: 700;
-    border-radius: 50%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    padding: 0 4px;
-}
-
-
-/* Dropdown */
+/* ================= NOTIFICATION DROPDOWN ================= */
 
 .notification-dropdown {
     position: absolute;
-    top: 52px;
+    top: 46px;
     right: 0;
-    width: 360px;
-    max-height: 420px;
+    width: 320px;
+    max-height: 400px;
     background: #181818;
     border: 1px solid #2a2a2a;
     border-radius: 12px;
-    box-shadow: 0 16px 48px rgba(0, 0, 0, 0.6);
+    box-shadow: 0 12px 40px rgba(0, 0, 0, 0.5);
     z-index: 1000;
     overflow: hidden;
-    animation: dropdownFade 0.2s ease;
-}
-
-@keyframes dropdownFade {
-    from {
-        opacity: 0;
-        transform: translateY(-8px);
-    }
-    to {
-        opacity: 1;
-        transform: translateY(0);
-    }
 }
 
 .notification-header {
@@ -377,7 +299,7 @@
 }
 
 .notification-list {
-    max-height: 340px;
+    max-height: 320px;
     overflow-y: auto;
 }
 
@@ -393,7 +315,6 @@
     gap: 12px;
     padding: 14px 16px;
     border-bottom: 1px solid #222;
-    transition: background 0.15s;
     position: relative;
 }
 
@@ -403,10 +324,6 @@
 
 .notification-item.read {
     opacity: 0.7;
-}
-
-.notification-item.premium {
-    background: linear-gradient( 90deg, rgba(251, 191, 36, 0.08), transparent);
 }
 
 .notification-icon {
@@ -441,7 +358,6 @@
     margin: 0 0 6px;
     font-size: 13px;
     color: #aaa;
-    line-height: 1.4;
 }
 
 .notification-time {
@@ -455,22 +371,15 @@
     color: #666;
     cursor: pointer;
     padding: 4px;
-    border-radius: 4px;
     opacity: 0;
-    transition: opacity 0.15s;
 }
 
 .notification-item:hover .notification-close {
     opacity: 1;
 }
 
-.notification-close:hover {
-    color: #fff;
-    background: #333;
-}
 
-
-/* ═══════ MILESTONE CARD ═══════ */
+/* Milestone */
 
 .milestone-card {
     display: flex;
@@ -478,7 +387,6 @@
     padding: 16px;
     background: rgba(29, 185, 84, 0.08);
     border-bottom: 1px solid #2a2a2a;
-    align-items: flex-start;
 }
 
 .milestone-card.unlocked {
@@ -500,10 +408,6 @@
 .milestone-icon.premium {
     background: linear-gradient(135deg, #fbbf24, #f59e0b);
     color: #000;
-}
-
-.milestone-content {
-    flex: 1;
 }
 
 .milestone-title {
@@ -529,43 +433,60 @@
     height: 100%;
     background: linear-gradient(90deg, #1db954, #1ed760);
     border-radius: 10px;
-    transition: width 0.6s ease;
 }
 
-.profile-info {
-    display: flex;
-    flex-direction: column;
-    align-items: flex-start;
-    gap: 2px;
-}
 
-.profile-name {
-    font-size: 14px;
-    font-weight: 600;
-    color: #fff;
-    line-height: 1.2;
-}
+/* ================= MOBILE ================= */
 
-.topbar-premium-badge {
-    display: inline-flex;
-    align-items: center;
-    gap: 3px;
-    background: linear-gradient(135deg, #fbbf24, #f59e0b);
-    color: #000;
-    font-size: 10px;
-    font-weight: 700;
-    padding: 2px 7px;
-    border-radius: 20px;
-    letter-spacing: 0.3px;
-    box-shadow: 0 0 10px rgba(251, 191, 36, 0.4);
-    animation: premiumGlow 2s ease-in-out infinite alternate;
-}
-
-@keyframes premiumGlow {
-    from {
-        box-shadow: 0 0 6px rgba(251, 191, 36, 0.35);
+@media (max-width: 600px) {
+    .topbar {
+        height: 56px;
+        padding: 0 10px;
+        gap: 8px;
     }
-    to {
-        box-shadow: 0 0 14px rgba(251, 191, 36, 0.7);
+    /* Hide back & forward completely */
+    .topbar-left {
+        display: none;
+    }
+    .search-container {
+        height: 38px;
+        padding: 0 12px;
+    }
+    .search-container input {
+        font-size: 13px;
+    }
+    /* Show Nova inside search */
+    .nova-btn-mobile {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+    /* Hide desktop Nova */
+    .desktop-only {
+        display: none !important;
+    }
+    .notification-btn {
+        width: 34px;
+        height: 34px;
+    }
+    .profile-btn {
+        width: 34px;
+        height: 34px;
+        padding: 0;
+        border-radius: 50%;
+        justify-content: center;
+    }
+    .profile-name,
+    .profile-btn svg:last-child {
+        display: none;
+    }
+    /* Dropdown */
+    .notification-dropdown {
+        position: fixed;
+        top: 60px;
+        left: 10px;
+        right: 10px;
+        width: auto;
+        max-height: 70vh;
     }
 }

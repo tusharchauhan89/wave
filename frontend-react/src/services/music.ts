@@ -149,3 +149,52 @@ export const getHistory = async () => {
   }
   return out;
 };
+// Related songs nikalne ke liye (artist based)
+
+export const getRelatedSongs = async (song: Song, limit = 15): Promise<Song[]> => {
+  try {
+    let artistName =
+      song.artists?.primary?.[0]?.name ||
+      (song as any).primaryArtists ||
+      (song as any).singers ||
+      (song as any).artist ||
+      "";
+
+    // Kabhi-kabhi artists array alag format mein hota hai
+    if (!artistName && Array.isArray((song as any).artists)) {
+      artistName = (song as any).artists[0]?.name || "";
+    }
+
+    const mainArtist = artistName ? artistName.split(",")[0].trim() : "";
+    const albumName = song.album?.name || (song as any).album?.name || "";
+
+    console.log("Related → Artist:", mainArtist, "| Album:", albumName, "| Song:", song.name);
+
+    let results: Song[] = [];
+
+    if (mainArtist) {
+      results = await searchMusic(mainArtist, limit + 10);
+    } else if (albumName) {
+      results = await searchMusic(albumName, limit + 10);
+    } else {
+      console.warn("No artist/album found for related songs");
+      return [];
+    }
+
+    const currentName = (song.name || "").toLowerCase().trim();
+    const currentId = song.id;
+
+    const filtered = results.filter((s) => {
+      if (s.id === currentId) return false;
+      const name = (s.name || "").toLowerCase().trim();
+      if (name === currentName) return false;
+      return true;
+    });
+
+    console.log("Related → After filter:", filtered.length);
+    return filtered.slice(0, limit);
+  } catch (err) {
+    console.error("Related songs failed:", err);
+    return [];
+  }
+};

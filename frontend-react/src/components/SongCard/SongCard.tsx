@@ -2,12 +2,12 @@ import "./SongCard.css";
 import { useState } from "react";
 import { Play, Heart, ListPlus } from "lucide-react";
 import { usePlayer } from "../../context/PlayerContext";
-import { likeSong } from "../../services/music";
+import { likeSong, getRelatedSongs } from "../../services/music";
 import { listPlaylists, addSongToPlaylist } from "../../services/playlist";
 import { isLoggedIn } from "../../services/auth";
 
-function SongCard({ song, queue }: { song: any; queue: any[] }) {
-  const { playSong } = usePlayer();
+function SongCard({ song }: { song: any }) {
+  const { playSong, addToQueue } = usePlayer();
   const [menuOpen, setMenuOpen] = useState(false);
   const [playlists, setPlaylists] = useState<any[]>([]);
   const [loadingPl, setLoadingPl] = useState(false);
@@ -22,9 +22,18 @@ function SongCard({ song, queue }: { song: any; queue: any[] }) {
     song?.artists?.primary?.map((a: any) => a.name).join(", ") ||
     "Unknown";
 
-  const onPlay = (e: React.MouseEvent) => {
+  const onPlay = async (e: React.MouseEvent) => {
     e.stopPropagation();
-    playSong(song, queue).catch(console.error);
+    try {
+      // 1. Selected song play karo
+      await playSong(song, [song]);
+
+      // 2. Related songs laao aur queue mein add karo
+      const related = await getRelatedSongs(song, 15);
+      related.forEach((s) => addToQueue(s));
+    } catch (err) {
+      console.error(err);
+    }
   };
 
   const onLike = async (e: React.MouseEvent) => {

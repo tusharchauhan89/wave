@@ -1,63 +1,190 @@
 .home-page {
-    display: flex;
-    flex-direction: column;
-    gap: 8px;
+    padding: 24px 32px 140px;
+    min-height: 100%;
+    background: linear-gradient( 180deg, #9b1b3a 0%, #5c1430 90px, #2a1525 180px, #121212 320px);
 }
 
-.recent-section {
+
+/* ───── Tabs ───── */
+
+.home-tabs {
+    display: flex;
+    gap: 8px;
     margin-bottom: 24px;
 }
 
-.recent-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 12px;
+.tab-btn {
+    background: rgba(255, 255, 255, 0.12);
+    border: none;
+    color: #fff;
+    padding: 8px 18px;
+    border-radius: 999px;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s;
 }
 
-.recent-header h2 {
-    margin: 0;
+.tab-btn:hover {
+    background: rgba(255, 255, 255, 0.2);
+}
+
+.tab-btn.active {
+    background: #fff;
+    color: #000;
+}
+
+
+/* ───── Quick Access Cards (exact match to SS) ───── */
+
+.quick-access {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 14px;
+    margin-bottom: 40px;
+    max-width: 720px;
+}
+
+.quick-card {
+    display: flex;
+    align-items: center;
+    height: 72px;
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 8px;
+    overflow: hidden;
+    cursor: pointer;
+    transition: background 0.2s;
+}
+
+.quick-card:hover {
+    background: rgba(255, 255, 255, 0.18);
+}
+
+.quick-icon {
+    width: 72px;
+    height: 72px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
     color: #fff;
-    font-size: 22px;
+}
+
+
+/* Colors from the target screenshot */
+
+.quick-card.liked .quick-icon {
+    background: linear-gradient(135deg, #6b2aff, #9b59b6);
+}
+
+.quick-card.playlists .quick-icon {
+    background: linear-gradient(135deg, #1db954, #1ed760);
+}
+
+.quick-card.recent .quick-icon {
+    background: linear-gradient(135deg, #e74c3c, #c0392b);
+}
+
+.quick-card.made-for-you .quick-icon {
+    background: linear-gradient(135deg, #3498db, #2980b9);
+}
+
+.quick-text {
+    display: flex;
+    flex-direction: column;
+    padding: 0 16px;
+    overflow: hidden;
+}
+
+.quick-title {
+    font-size: 15px;
     font-weight: 700;
+    color: #fff;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.quick-subtitle {
+    font-size: 12px;
+    color: #d0d0d0;
+    margin-top: 3px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+
+/* ───── Sections ───── */
+
+.home-section {
+    margin-bottom: 40px;
+}
+
+.section-header {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    margin-bottom: 16px;
+}
+
+.section-header h2 {
+    margin: 0;
+    font-size: 24px;
+    font-weight: 700;
+    color: #fff;
+}
+
+.section-subtitle {
+    margin: 4px 0 0;
+    font-size: 14px;
+    color: #b3b3b3;
 }
 
 .show-all-btn {
-    background: transparent;
+    background: none;
     border: none;
     color: #b3b3b3;
     font-size: 13px;
-    font-weight: 600;
+    font-weight: 700;
     cursor: pointer;
-    transition: color 0.2s ease;
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
+    margin-top: 4px;
 }
 
 .show-all-btn:hover {
     color: #fff;
+    text-decoration: underline;
 }
 
-.recent-empty {
-    color: #888;
-    margin: 8px 0 12px;
+.empty-text {
+    color: #666;
+    font-size: 14px;
+    padding: 20px 0;
 }
 
 .recent-grid {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 16px;
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+    gap: 20px;
 }
 
 
-/* Phone */
+/* Responsive */
 
-@media (max-width: 450px) {
-    .recent-header h2 {
-        font-size: 18px;
+@media (max-width: 900px) {
+    .quick-access {
+        grid-template-columns: repeat(2, 1fr);
+        max-width: 100%;
     }
-    .show-all-btn {
-        font-size: 12px;
+    .home-page {
+        padding: 20px 16px 140px;
     }
-    .recent-grid {
-        gap: 10px;
+}
+
+@media (max-width: 500px) {
+    .quick-access {
+        grid-template-columns: 1fr;
     }
 }

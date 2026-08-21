@@ -5,7 +5,7 @@ import os
 
 load_dotenv()
 
-from routers import music, playlists, voice, auth, chat   # ← add chat
+from routers import music, playlists, voice, auth, chat
 
 app = FastAPI(
     title="Spotify Clone API",
@@ -13,9 +13,13 @@ app = FastAPI(
     version="1.0.0"
 )
 
+# Get frontend URL from environment variable (for production)
+frontend_url = os.getenv("FRONTEND_URL", "http://localhost:5173")
+
 app.add_middleware(
     CORSMiddleware,
     allow_origins=[
+        frontend_url,                    # Production frontend (from env)
         "http://localhost:5173",
         "http://127.0.0.1:5173",
         "http://localhost:3000",
@@ -32,7 +36,7 @@ app.include_router(music.router, prefix="/api/music", tags=["Music"])
 app.include_router(playlists.router, prefix="/api/playlists", tags=["Playlists & Liked"])
 app.include_router(voice.router, prefix="/api/voice", tags=["Voice Assistant"])
 app.include_router(auth.router, prefix="/api/auth", tags=["Auth"])
-app.include_router(chat.router, prefix="/api/chat", tags=["Nova Chat"])   # ← add this
+app.include_router(chat.router, prefix="/api/chat", tags=["Nova Chat"])
 
 
 @app.get("/")

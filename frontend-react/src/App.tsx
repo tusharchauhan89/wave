@@ -14,7 +14,7 @@ import Profile from "./pages/Profile/Profile";
 import Settings from "./pages/Settings/Settings";
 import Login from "./pages/Login/Login";
 import Register from "./pages/Register/Register";
-
+import MadeForYou from "./pages/MadeForYou/MadeForYou";
 function App() {
   return (
     <BrowserRouter>
@@ -29,9 +29,10 @@ function App() {
             <Route path="liked" element={<LikedSongs />} />
             <Route path="library" element={<Library />} />
             <Route path="playlist/:id" element={<Playlist />} />
-          
+          <Route path="playlists" element={<Library />} />
             <Route path="profile" element={<Profile />} />
             <Route path="settings" element={<Settings />} />
+            <Route path="made-for-you" element={<MadeForYou />} />
           </Route>
         </Routes>
       </PlayerProvider>

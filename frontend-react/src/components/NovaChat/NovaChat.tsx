@@ -11,14 +11,14 @@ interface NovaChatProps {
 }
 
 const MOODS = [
-  { label: "😢 Sad", text: "play sad songs" },
-  { label: "🎉 Party", text: "play party songs" },
-  { label: "🌙 Lofi", text: "play lofi chill beats" },
-  { label: "❤️ Romantic", text: "play romantic songs" },
-  { label: "💪 Gym", text: "play gym workout songs" },
-  { label: "🌧️ Rainy", text: "play rainy day songs" },
-  { label: "🧘 Focus", text: "play focus study music" },
-  { label: "🔥 Hindi Hits", text: "play trending hindi songs" },
+  { label: "Sad", text: "play sad songs" },
+  { label: "Party", text: "play party songs" },
+  { label: "Lofi", text: "play lofi chill beats" },
+  { label: "❤️", text: "play romantic songs" },
+  { label: "💪", text: "play gym workout songs" },
+  { label: "Rainy", text: "play rainy day songs" },
+  { label: "🧘 ", text: "play focus study music" },
+  { label: "🔥 ", text: "play trending hindi songs" },
 ];
 
 function NovaChat({ open, onClose }: NovaChatProps) {
@@ -26,7 +26,7 @@ function NovaChat({ open, onClose }: NovaChatProps) {
     {
       role: "assistant",
       content:
-        "Hey! I'm Nova(Grove-AI)🎵 — your music companion.Tell me what you want to hear, or simply describe the vibe.",
+        "Hey! I'm Nova(Grove-AI)🎵 — your music companion. Tell me what you want to hear, or simply describe the vibe.",
     },
   ]);
   const [input, setInput] = useState("");
@@ -42,7 +42,7 @@ function NovaChat({ open, onClose }: NovaChatProps) {
     getChatStatus()
       .then((res) => {
         if (res.smart) {
-          setProviderLabel(`AI · ${res.provider || "grove"}`);
+          setProviderLabel(`AI · Grove`);
         } else {
           setProviderLabel("Offline · no API key");
         }
@@ -105,20 +105,36 @@ function NovaChat({ open, onClose }: NovaChatProps) {
 
   return (
     <div className="nova-chat-panel">
+      {/* Header */}
       <div className="nova-chat-header">
         <div className="nova-chat-title">
-          <Sparkles size={18} />
+          <Sparkles size={17} />
           <div>
             <strong>Nova</strong>
             <small>{providerLabel}</small>
           </div>
         </div>
         <button className="nova-chat-close" onClick={onClose}>
-          <X size={18} />
+          <X size={16} />
         </button>
       </div>
 
-      {/* Mood chips */}
+      {/* Messages */}
+      <div className="nova-chat-messages">
+        {messages.map((m, i) => (
+          <div key={i} className={`nova-bubble ${m.role}`}>
+            {m.content}
+          </div>
+        ))}
+        {sending && (
+          <div className="nova-bubble assistant typing">
+            💿 Digging through the crates...
+          </div>
+        )}
+        <div ref={bottomRef} />
+      </div>
+
+      {/* Mood chips — now at the bottom */}
       <div className="nova-moods">
         {MOODS.map((mood) => (
           <button
@@ -132,18 +148,7 @@ function NovaChat({ open, onClose }: NovaChatProps) {
         ))}
       </div>
 
-      <div className="nova-chat-messages">
-        {messages.map((m, i) => (
-          <div key={i} className={`nova-bubble ${m.role}`}>
-            {m.content}
-          </div>
-        ))}
-        {sending && (
-          <div className="nova-bubble assistant typing">💿 Digging through the crates...</div>
-        )}
-        <div ref={bottomRef} />
-      </div>
-
+      {/* Input */}
       <div className="nova-chat-input-row">
         <input
           value={input}
@@ -154,10 +159,13 @@ function NovaChat({ open, onClose }: NovaChatProps) {
               handleSend();
             }
           }}
-          placeholder="Ask Nova… play a song, mood, etc."
+          placeholder="Ask Nova…"
         />
-        <button onClick={() => handleSend()} disabled={sending || !input.trim()}>
-          <Send size={16} />
+        <button
+          onClick={() => handleSend()}
+          disabled={sending || !input.trim()}
+        >
+          <Send size={15} />
         </button>
       </div>
     </div>

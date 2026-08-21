@@ -1,164 +1,298 @@
+/* ═══════════════════════════════════════════════
+   NOVA CHAT — Music Streaming Bot Vibe (Dark)
+═══════════════════════════════════════════════ */
+
 .nova-chat-panel {
     position: fixed;
-    right: 24px;
-    bottom: 100px;
-    width: 380px;
-    max-height: 560px;
-    background: #121212;
-    border: 1px solid #282828;
-    border-radius: 16px;
+    bottom: 88px;
+    right: 20px;
+    width: 360px;
+    height: 480px;
     display: flex;
     flex-direction: column;
-    z-index: 1000;
-    box-shadow: 0 16px 50px rgba(0, 0, 0, 0.55);
+    background: #0a0a0a;
+    border: 1px solid #1e1e1e;
+    border-radius: 16px;
+    box-shadow: 0 18px 50px rgba(0, 0, 0, 0.6);
     overflow: hidden;
+    z-index: 9999;
+    font-family: Inter, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    color: #f0f0f0;
+    animation: panelIn 0.28s ease;
 }
+
+@keyframes panelIn {
+    from {
+        opacity: 0;
+        transform: translateY(14px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+
+/* ── Header ── */
 
 .nova-chat-header {
     display: flex;
-    justify-content: space-between;
     align-items: center;
-    padding: 14px 16px;
-    background: #181818;
-    border-bottom: 1px solid #282828;
+    justify-content: space-between;
+    padding: 13px 16px;
+    background: #111;
+    border-bottom: 1px solid #1c1c1c;
 }
 
 .nova-chat-title {
     display: flex;
     align-items: center;
-    gap: 10px;
-    color: #fff;
+    gap: 9px;
+}
+
+.nova-chat-title svg {
+    color: #1ed760;
 }
 
 .nova-chat-title strong {
     display: block;
-    font-size: 15px;
+    font-size: 14.5px;
+    font-weight: 600;
+    color: #fff;
+    letter-spacing: -0.2px;
 }
 
 .nova-chat-title small {
     display: block;
-    color: #1db954;
-    font-size: 11px;
-    margin-top: 2px;
+    font-size: 10.5px;
+    color: #666;
+    margin-top: 1px;
+    font-weight: 400;
 }
 
 .nova-chat-close {
-    background: transparent;
+    width: 28px;
+    height: 28px;
+    border-radius: 7px;
     border: none;
-    color: #b3b3b3;
+    background: transparent;
+    color: #555;
+    display: flex;
+    align-items: center;
+    justify-content: center;
     cursor: pointer;
-    padding: 4px;
-    border-radius: 8px;
+    transition: all 0.15s ease;
 }
 
 .nova-chat-close:hover {
-    background: #282828;
+    background: #1a1a1a;
     color: #fff;
 }
+
+
+/* ── Mood Chips ── */
+
+.nova-moods {
+    display: flex;
+    gap: 7px;
+    padding: 10px 14px;
+    overflow-x: auto;
+    background: #0d0d0d;
+    border-bottom: 1px solid #191919;
+    scrollbar-width: none;
+}
+
+.nova-moods::-webkit-scrollbar {
+    display: none;
+}
+
+.nova-mood-chip {
+    flex-shrink: 0;
+    height: 30px;
+    padding: 0 12px;
+    border-radius: 7px;
+    border: 1px solid #242424;
+    background: #131313;
+    color: #b8b8b8;
+    font-size: 12px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.15s ease;
+    white-space: nowrap;
+    display: flex;
+    align-items: center;
+}
+
+.nova-mood-chip:hover:not(:disabled) {
+    background: #181818;
+    border-color: #1ed760;
+    color: #1ed760;
+}
+
+.nova-mood-chip:disabled {
+    opacity: 0.4;
+    cursor: not-allowed;
+}
+
+
+/* ── Messages + Grove watermark ── */
 
 .nova-chat-messages {
     flex: 1;
     overflow-y: auto;
-    padding: 16px;
+    padding: 16px 14px;
     display: flex;
     flex-direction: column;
     gap: 10px;
-    min-height: 280px;
+    background: #0a0a0a;
+    position: relative;
+    scrollbar-width: thin;
+    scrollbar-color: #262626 transparent;
 }
 
+.nova-chat-messages::-webkit-scrollbar {
+    width: 4px;
+}
+
+.nova-chat-messages::-webkit-scrollbar-thumb {
+    background: #262626;
+    border-radius: 10px;
+}
+
+
+/* Grove text watermark */
+
+
+/* Grove logo image watermark */
+
+.nova-chat-messages::before {
+    content: "";
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 160px;
+    /* adjust size as needed */
+    height: 160px;
+    background-image: url("../../assets/image.png");
+    /* ← your logo path */
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-position: center;
+    opacity: 0.23;
+    /* very subtle */
+    pointer-events: none;
+    z-index: 0;
+}
+
+.nova-chat-messages>* {
+    position: relative;
+    z-index: 1;
+}
+
+
+/* Bubbles */
+
 .nova-bubble {
-    max-width: 88%;
+    max-width: 84%;
     padding: 10px 14px;
-    border-radius: 14px;
-    font-size: 14px;
+    border-radius: 12px;
+    font-size: 13.2px;
     line-height: 1.45;
-    white-space: pre-wrap;
+    word-break: break-word;
 }
 
 .nova-bubble.user {
     align-self: flex-end;
-    background: #1db954;
+    background: #1ed760;
     color: #000;
-    border-bottom-right-radius: 4px;
+    font-weight: 500;
+    border-bottom-right-radius: 3px;
 }
 
 .nova-bubble.assistant {
     align-self: flex-start;
-    background: #282828;
-    color: #fff;
-    border-bottom-left-radius: 4px;
+    background: #151515;
+    color: #ddd;
+    border: 1px solid #222;
+    border-bottom-left-radius: 3px;
 }
 
 .nova-bubble.typing {
-    opacity: 0.7;
+    background: #151515;
+    color: #555;
     font-style: italic;
+    border: 1px solid #222;
 }
+
+
+/* ── Input row ── */
 
 .nova-chat-input-row {
     display: flex;
-    gap: 8px;
-    padding: 12px;
-    border-top: 1px solid #282828;
-    background: #181818;
+    align-items: center;
+    gap: 9px;
+    padding: 12px 14px;
+    background: #111;
+    border-top: 1px solid #1c1c1c;
 }
 
 .nova-chat-input-row input {
     flex: 1;
-    background: #282828;
-    border: none;
-    border-radius: 22px;
-    padding: 11px 16px;
+    height: 40px;
+    background: #151515;
+    border: 1px solid #252525;
+    border-radius: 9px;
+    padding: 0 14px;
     color: #fff;
+    font-size: 13.2px;
     outline: none;
-    font-size: 14px;
+    transition: border-color 0.15s ease;
+}
+
+.nova-chat-input-row input::placeholder {
+    color: #4a4a4a;
+}
+
+.nova-chat-input-row input:focus {
+    border-color: #1ed760;
 }
 
 .nova-chat-input-row button {
-    width: 42px;
-    height: 42px;
-    border-radius: 50%;
+    width: 40px;
+    height: 40px;
+    border-radius: 9px;
     border: none;
-    background: #1db954;
+    background: #1ed760;
     color: #000;
     display: flex;
     align-items: center;
     justify-content: center;
     cursor: pointer;
+    transition: all 0.15s ease;
+    flex-shrink: 0;
+}
+
+.nova-chat-input-row button:hover:not(:disabled) {
+    background: #1fdf6a;
+    transform: scale(1.04);
 }
 
 .nova-chat-input-row button:disabled {
-    opacity: 0.5;
+    background: #1f1f1f;
+    color: #444;
     cursor: not-allowed;
+    transform: none;
 }
 
 .nova-moods {
     display: flex;
-    flex-wrap: wrap;
-    gap: 8px;
-    padding: 12px 16px 4px;
-    background: #181818;
-    border-bottom: 1px solid #282828;
-}
-
-.nova-mood-chip {
-    background: #282828;
-    color: #fff;
-    border: 1px solid #333;
-    border-radius: 999px;
-    padding: 6px 12px;
-    font-size: 12px;
-    font-weight: 500;
-    cursor: pointer;
-    transition: all 0.15s ease;
-}
-
-.nova-mood-chip:hover:not(:disabled) {
-    background: #1db954;
-    color: #000;
-    border-color: #1db954;
-}
-
-.nova-mood-chip:disabled {
-    opacity: 0.5;
-    cursor: not-allowed;
+    gap: 7px;
+    padding: 10px 14px;
+    overflow-x: auto;
+    background: #0d0d0d;
+    border-top: 1px solid #191919;
+    /* ← changed */
+    border-bottom: none;
+    scrollbar-width: none;
 }
