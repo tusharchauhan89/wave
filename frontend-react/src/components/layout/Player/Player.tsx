@@ -88,30 +88,15 @@ function Player({
   ] = useState<string[]>([]);
 
   useEffect(() => {
-    const loadLikedSongs =
-      async () => {
-        try {
-          const response =
-            await getLikedSongs();
-
-          const songs =
-            response?.songs ??
-            response?.data ??
-            [];
-
-          setLikedSongs(
-            songs.map(
-              (song: any) =>
-                String(song.id)
-            )
-          );
-        } catch (error) {
-          console.error(
-            "Failed to load liked songs",
-            error
-          );
-        }
-      };
+    const loadLikedSongs = async () => {
+      try {
+        const response = await getLikedSongs();
+        const songs = Array.isArray(response) ? response : [];
+        setLikedSongs(songs.map((song: any) => String(song.id)));
+      } catch (error) {
+        console.error("Failed to load liked songs", error);
+      }
+    };
 
     loadLikedSongs();
   }, []);

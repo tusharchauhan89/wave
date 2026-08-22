@@ -11,35 +11,29 @@ load_dotenv()
 
 BASE = os.getenv("SAAVN_BASE", "https://saavn.sumit.co/api")
 JIOSAAVN_NATIVE = "https://www.jiosaavn.com/api.php"
-USE_NATIVE = os.getenv("SAAVN_USE_NATIVE", "false").lower() == "true"
+# default TRUE — Sumit limit avoid karne ke liye
+USE_NATIVE = os.getenv("SAAVN_USE_NATIVE", "true").lower() == "true"
 
 HEADERS = {
-    "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36",
-    "Accept": "application/json",
+    "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36",
+    "Accept": "application/json, text/plain, */*",
+    "Accept-Language": "en-US,en;q=0.9",
+    "Referer": "https://www.jiosaavn.com/",
+    "Origin": "https://www.jiosaavn.com",
 }
 
 
 # ---------- Helpers ----------
 
 def fix_image_url(url: str | None) -> list:
-    """Return image in Sumit-style format (array of qualities)"""
     if not url:
         return []
-    
     url = url.replace("http://", "https://")
-    
     qualities = ["50x50", "150x150", "500x500"]
     result = []
-    
     for q in qualities:
-        fixed = url
-        # replace any existing size
-        fixed = fixed.replace("150x150", q).replace("50x50", q).replace("500x500", q)
-        result.append({
-            "quality": q,
-            "url": fixed
-        })
-    
+        fixed = url.replace("150x150", q).replace("50x50", q).replace("500x500", q)
+        result.append({"quality": q, "url": fixed})
     return result
 
 
@@ -73,19 +67,38 @@ def build_download_urls(encrypted_media_url: str) -> List[Dict[str, str]]:
     return out
 
 
+def parse_artists(item: dict, more: dict) -> list:
+    primary_raw = (
+        more.get("primary_artists")
+        or item.get("primary_artists")
+        or more.get("singer")
+        or item.get("subtitle")
+        or ""
+    )
+    if isinstance(primary_raw, list):
+        return [
+            {"name": (a.get("name") if isinstance(a, dict) else str(a)).strip()}
+            for a in primary_raw
+            if a
+        ]
+    # subtitle sometimes "Artist - Album"
+    text = str(primary_raw).strip()
+    if " - " in text and not more.get("primary_artists"):
+        text = text.split(" - ")[0]
+    return [
+        {"name": a.strip()}
+        for a in text.split(",")
+        if a.strip() and a.strip().lower() not in ("song", "album", "playlist")
+    ]
+
+
 def enrich_song(song: dict) -> dict:
-    """Add downloadUrl from encrypted_media_url if missing + fix image"""
     if not isinstance(song, dict):
         return song
-
-    # Fix image → always make it array format
     if song.get("image") and isinstance(song["image"], str):
         song["image"] = fix_image_url(song["image"])
-
-    # already has download links (sumit API style)
     if song.get("downloadUrl") or song.get("download_url"):
         return song
-
     enc = (
         song.get("encrypted_media_url")
         or song.get("encryptedMediaUrl")
@@ -94,10 +107,32 @@ def enrich_song(song: dict) -> dict:
     if enc:
         urls = build_download_urls(enc)
         song["downloadUrl"] = urls
-        # convenience: best url
         if urls:
-            song["media_url"] = urls[-1]["url"]  # 320
+            song["media_url"] = urls[-1]["url"]
     return song
+
+
+def item_to_song(item: dict) -> dict:
+    more = item.get("more_info") or {}
+    song = {
+        "id": item.get("id"),
+        "name": item.get("title") or item.get("song") or item.get("name"),
+        "type": "song",
+        "year": item.get("year"),
+        "duration": int(more.get("duration") or item.get("duration") or 0),
+        "language": item.get("language") or more.get("language"),
+        "image": fix_image_url(item.get("image")),
+        "url": item.get("perma_url") or item.get("url"),
+        "album": {
+            "name": more.get("album") or item.get("album"),
+            "id": more.get("album_id"),
+        },
+        "artists": {"primary": parse_artists(item, more)},
+        "encrypted_media_url": more.get("encrypted_media_url")
+        or item.get("encrypted_media_url"),
+        "320kbps": more.get("320kbps") or item.get("320kbps"),
+    }
+    return enrich_song(song)
 
 
 # ---------- HTTP helpers ----------
@@ -114,11 +149,9 @@ async def _native(params: dict) -> Any:
     async with httpx.AsyncClient(timeout=20.0, headers=HEADERS) as client:
         resp = await client.get(JIOSAAVN_NATIVE, params=params)
         resp.raise_for_status()
-        # JioSaavn sometimes returns JSON with weird prefix
         text = resp.text
         if text.startswith("{"):
             return resp.json()
-        # strip possible callback garbage
         start = text.find("{")
         end = text.rfind("}")
         if start != -1 and end != -1:
@@ -151,23 +184,27 @@ async def search_songs(query: str, page: int = 0, limit: int = 50) -> Any:
     return await _get("/search", {"query": query})
 
 
-async def search_native(query: str, page: int = 1, limit: int = 50) -> Any:
-    """Direct JioSaavn web API search + decrypt URLs."""
+async def search_native(query: str, page: int = 0, limit: int = 50) -> Any:
+    """Full JioSaavn native search — getResults + autocomplete fallback."""
+    p = max(1, int(page) + 1)  # frontend 0-based → JioSaavn 1-based
+    n = min(max(int(limit) or 50, 1), 50)
+
     params = {
         "__call": "search.getResults",
-        "p": max(1, page),
+        "p": p,
         "q": query,
-        "n": limit,
+        "n": n,
         "_format": "json",
-        "_marker": 0,
-        "api_version": 4,
+        "_marker": "0",
+        "api_version": "4",
         "ctx": "web6dot0",
     }
     raw = await _native(params)
 
-    # normalize results
     results = []
+    total = 0
     if isinstance(raw, dict):
+        total = int(raw.get("total") or 0)
         results = (
             raw.get("results")
             or raw.get("songs")
@@ -177,43 +214,47 @@ async def search_native(query: str, page: int = 1, limit: int = 50) -> Any:
         if isinstance(results, dict):
             results = results.get("data") or results.get("results") or []
 
+    # Fallback: autocomplete (often finds more songs)
+    if len(results) < 5:
+        try:
+            ac = await _native({
+                "__call": "autocomplete.get",
+                "query": query,
+                "_format": "json",
+                "_marker": "0",
+                "ctx": "web6dot0",
+            })
+            if isinstance(ac, dict):
+                songs_block = ac.get("songs") or {}
+                extra = []
+                if isinstance(songs_block, dict):
+                    extra = songs_block.get("data") or []
+                elif isinstance(songs_block, list):
+                    extra = songs_block
+                # merge unique by id
+                seen = {str(r.get("id")) for r in results if isinstance(r, dict)}
+                for item in extra:
+                    if not isinstance(item, dict):
+                        continue
+                    sid = str(item.get("id") or "")
+                    if sid and sid not in seen:
+                        results.append(item)
+                        seen.add(sid)
+        except Exception as e:
+            print("autocomplete fallback error:", e)
+
     enriched = []
     for item in results or []:
         if not isinstance(item, dict):
             continue
-        more = item.get("more_info") or {}
-        song = {
-            "id": item.get("id"),
-            "name": item.get("title") or item.get("song") or item.get("name"),
-            "type": "song",
-            "year": item.get("year"),
-            "duration": int(more.get("duration") or item.get("duration") or 0),
-            "language": item.get("language"),
-            "image": fix_image_url(item.get("image")),
-            "url": item.get("perma_url") or item.get("url"),
-            "album": {
-                "name": more.get("album") or item.get("album"),
-                "id": more.get("album_id"),
-            },
-            "artists": {
-                "primary": [
-                    {"name": a.strip()}
-                    for a in str(
-                        more.get("primary_artists")
-                        or item.get("primary_artists")
-                        or ""
-                    ).split(",")
-                    if a.strip()
-                ]
-            },
-            "encrypted_media_url": more.get("encrypted_media_url")
-            or item.get("encrypted_media_url"),
-            "320kbps": more.get("320kbps") or item.get("320kbps"),
-        }
-        enriched.append(enrich_song(song))
+        # skip non-songs if type present
+        t = (item.get("type") or "song").lower()
+        if t not in ("song", "songs", ""):
+            continue
+        enriched.append(item_to_song(item))
 
     return {
-        "total": len(enriched),
+        "total": total or len(enriched),
         "results": enriched,
     }
 
@@ -225,9 +266,9 @@ async def get_song(song_id: str) -> Any:
         params = {
             "__call": "song.getDetails",
             "pids": song_id,
-            "api_version": 4,
+            "api_version": "4",
             "_format": "json",
-            "_marker": 0,
+            "_marker": "0",
             "ctx": "web6dot0",
         }
         raw = await _native(params)
@@ -298,5 +339,25 @@ async def get_charts() -> Any:
 
 
 async def search_artists(query: str, page: int = 0, limit: int = 20) -> Any:
+    if USE_NATIVE:
+        # use autocomplete artists block
+        try:
+            ac = await _native({
+                "__call": "autocomplete.get",
+                "query": query,
+                "_format": "json",
+                "_marker": "0",
+                "ctx": "web6dot0",
+            })
+            artists = []
+            if isinstance(ac, dict):
+                block = ac.get("artists") or {}
+                if isinstance(block, dict):
+                    artists = block.get("data") or []
+                elif isinstance(block, list):
+                    artists = block
+            return {"results": artists}
+        except Exception:
+            pass
     params = {"query": query, "page": page, "limit": limit}
     return await _get("/search/artists", params)

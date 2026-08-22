@@ -9,7 +9,7 @@ import Search from "./pages/Search/Search";
 import Playlist from "./pages/Playlist/Playlist";
 import LikedSongs from "./pages/LikedSongs/LikedSongs";
 import Library from "./pages/Library/Library";
-import GroveAI from "./pages/GroveAI/GroveAI";
+
 import Profile from "./pages/Profile/Profile";
 import Settings from "./pages/Settings/Settings";
 import Login from "./pages/Login/Login";

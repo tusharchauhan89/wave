@@ -25,10 +25,8 @@ function SongCard({ song, queue }: { song: any; queue?: any[] }) {
   const onPlay = async (e: React.MouseEvent) => {
     e.stopPropagation();
     try {
-      // 1. Selected song play karo
-      await playSong(song, [song]);
+      await playSong(song, queue && queue.length > 0 ? queue : [song]);
 
-      // 2. Related songs laao aur queue mein add karo
       const related = await getRelatedSongs(song, 15);
       related.forEach((s) => addToQueue(s));
     } catch (err) {
@@ -66,7 +64,10 @@ function SongCard({ song, queue }: { song: any; queue?: any[] }) {
       }
     } catch (err: any) {
       console.error(err);
-      alert(err?.response?.data?.detail || "Playlists load nahi hui (login check karo)");
+      alert(
+        err?.response?.data?.detail ||
+          "Playlists load nahi hui (login check karo)"
+      );
       setMenuOpen(false);
     } finally {
       setLoadingPl(false);
@@ -101,7 +102,12 @@ function SongCard({ song, queue }: { song: any; queue?: any[] }) {
         <button type="button" onClick={onLike} title="Like">
           <Heart size={16} />
         </button>
-        <button type="button" onClick={onAddClick} title="Add to playlist" disabled={loadingPl}>
+        <button
+          type="button"
+          onClick={onAddClick}
+          title="Add to playlist"
+          disabled={loadingPl}
+        >
           <ListPlus size={16} />
         </button>
       </div>

@@ -37,7 +37,7 @@ export default function NowPlaying({ open, onClose, onOpenQueue }: Props) {
   useEffect(() => {
     getLikedSongs()
       .then((res) => {
-        const songs = res?.songs ?? res?.data ?? [];
+        const songs = Array.isArray(res) ? res : [];
         setLiked(songs.map((s: any) => String(s.id)));
       })
       .catch(() => {});

@@ -1,20 +1,17 @@
 import "./Layout.css";
 import { useState, useEffect } from "react";
 import { Outlet } from "react-router-dom";
-import { Sparkles } from "lucide-react";
 
 import Sidebar from "./Sidebar";
 import Topbar from "./Topbar";
 import Player from "./Player";
 import NowPlaying from "./NowPlaying/NowPlaying";
 import MobileNav from "./MobileNav/MobileNav";
-import NovaChat from "../NovaChat/NovaChat";
 import { usePlayer } from "../../context/PlayerContext";
 
 function Layout() {
   const [showQueue, setShowQueue] = useState(false);
   const [showNowPlaying, setShowNowPlaying] = useState(false);
-  const [chatOpen, setChatOpen] = useState(false);
   const { currentSong } = usePlayer();
 
   useEffect(() => {
@@ -44,8 +41,6 @@ function Layout() {
         <Player
           showQueue={showQueue}
           setShowQueue={setShowQueue}
-          showNowPlaying={showNowPlaying}
-          setShowNowPlaying={setShowNowPlaying}
         />
 
         <MobileNav />
@@ -59,8 +54,6 @@ function Layout() {
           setShowQueue(true);
         }}
       />
-
-      
     </div>
   );
 }
