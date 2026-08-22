@@ -324,10 +324,18 @@ async def _get(
 
 
 async def _native(params: dict) -> Any:
+    """
+    Call JioSaavn native API.
+
+    Extra debug logging is intentionally kept here so Render logs can show
+    exactly what JioSaavn returned. This helps compare local vs production
+    behaviour without changing the search result itself.
+    """
 
     async with httpx.AsyncClient(
         timeout=20.0,
-        headers=HEADERS
+        headers=HEADERS,
+        follow_redirects=True
     ) as client:
 
         resp = await client.get(
@@ -339,6 +347,50 @@ async def _native(params: dict) -> Any:
 
         text = resp.text
 
+        # ---------- Production debug ----------
+        print("========== JIOSAAVN DEBUG ==========")
+        print("Request URL:", resp.url)
+        print("Status:", resp.status_code)
+        print("Request params:", params)
+
+        try:
+            debug_data = resp.json()
+
+            if isinstance(debug_data, dict):
+                debug_results = (
+                    debug_data.get("results")
+                    or debug_data.get("songs")
+                    or (
+                        debug_data.get("data") or {}
+                    ).get("results")
+                    or []
+                )
+
+                print("Total:", debug_data.get("total"))
+                print("Result count:", len(debug_results))
+
+                first_results = []
+
+                for item in debug_results[:5]:
+                    if isinstance(item, dict):
+                        first_results.append({
+                            "id": item.get("id"),
+                            "title": item.get("title") or item.get("name"),
+                            "subtitle": item.get("subtitle"),
+                            "type": item.get("type")
+                        })
+
+                print("First 5 results:", first_results)
+            else:
+                print("Response JSON type:", type(debug_data).__name__)
+
+        except Exception as debug_error:
+            print("Debug JSON parse error:", debug_error)
+            print("Response preview:", text[:500])
+
+        print("====================================")
+
+        # ---------- Normal response handling ----------
         if text.startswith("{"):
             return resp.json()
 

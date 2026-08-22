@@ -8,6 +8,7 @@ import "./Search.css";
 function Search() {
   const [params] = useSearchParams();
   const q = params.get("q") || "";
+
   const [songs, setSongs] = useState<Song[]>([]);
   const [loading, setLoading] = useState(false);
 
@@ -16,19 +17,34 @@ function Search() {
       setSongs([]);
       return;
     }
+
     setLoading(true);
+
     searchAll(q)
-      .then((r) => setSongs(r.songs || []))
-      .catch(console.error)
-      .finally(() => setLoading(false));
+      .then((r) => {
+        console.log("SONGS FROM API:", r.songs);
+        console.log("COUNT:", r.songs.length);
+
+        setSongs(r.songs || []);
+      })
+      .catch((error) => {
+        console.error("Search failed:", error);
+        setSongs([]);
+      })
+      .finally(() => {
+        setLoading(false);
+      });
   }, [q]);
 
   return (
     <div className="search-page">
       <div className="search-header">
         <h1>{q ? `Results for "${q}"` : "Search"}</h1>
+
         {q && !loading && (
-          <p>{songs.length} song{songs.length !== 1 ? "s" : ""} found</p>
+          <p>
+            {songs.length} song{songs.length !== 1 ? "s" : ""} found
+          </p>
         )}
       </div>
 
@@ -43,7 +59,9 @@ function Search() {
         <div className="search-empty">
           <h2>Find your music</h2>
           <p>Search for songs, artists, or albums</p>
-          <p className="hint">Try “Kesariya”, “Arijit Singh”, or “lofi”</p>
+          <p className="hint">
+            Try “Kesariya”, “Arijit Singh”, or “lofi”
+          </p>
         </div>
       )}
 
@@ -57,10 +75,10 @@ function Search() {
       {!loading && songs.length > 0 && (
         <div className="search-grid">
           {songs.map((s) => (
-            <SongCard 
-              key={s.id} 
-              song={s} 
-              queue={songs}   // ← yeh sahi hai
+            <SongCard
+              key={s.id}
+              song={s}
+              queue={songs}
             />
           ))}
         </div>
