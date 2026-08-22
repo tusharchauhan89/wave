@@ -77,7 +77,7 @@ The user profile provides access to personalized account information and music-r
 ## 📚 Music Library — Mobile
 
 <p align="center">
-  <img src="sceenshots/library-mobile.png" alt="WAVE Mobile Library" width="700"/>
+  <img src="sceenshots/mobile-lib.png" alt="WAVE Mobile Library" width="700"/>
 </p>
 
 The personal library provides access to saved and personalized music from mobile devices.
