@@ -1,185 +1,418 @@
-
-# 🎵 WAVE — Music Streaming Web Application
+# 🎵 WAVE — AI-Powered Music Streaming Platform
 
 <p align="center">
-  <img src="https://img.shields.io/badge/React-19-61DAFB?style=for-the-badge&logo=react&logoColor=white" alt="React">
-  <img src="https://img.shields.io/badge/TypeScript-6-3178C6?style=for-the-badge&logo=typescript&logoColor=white" alt="TypeScript">
-  <img src="https://img.shields.io/badge/FastAPI-0.115-009688?style=for-the-badge&logo=fastapi&logoColor=white" alt="FastAPI">
-  <img src="https://img.shields.io/badge/Supabase-Database-3ECF8E?style=for-the-badge&logo=supabase&logoColor=white" alt="Supabase">
-  <img src="https://img.shields.io/badge/Vite-8-646CFF?style=for-the-badge&logo=vite&logoColor=white" alt="Vite">
+  <img src="https://img.shields.io/badge/React-19-61DAFB?style=for-the-badge&logo=react&logoColor=white" />
+  <img src="https://img.shields.io/badge/TypeScript-5-3178C6?style=for-the-badge&logo=typescript&logoColor=white" />
+  <img src="https://img.shields.io/badge/FastAPI-Python-009688?style=for-the-badge&logo=fastapi&logoColor=white" />
+  <img src="https://img.shields.io/badge/Supabase-Database-3ECF8E?style=for-the-badge&logo=supabase&logoColor=white" />
+  <img src="https://img.shields.io/badge/Vite-646CFF?style=for-the-badge&logo=vite&logoColor=white" />
 </p>
 
 <p align="center">
-  A modern full-stack music streaming platform built with React, TypeScript and FastAPI.
+  <strong>A full-stack music streaming platform with AI-powered discovery and voice-controlled playback.</strong>
 </p>
 
 <p align="center">
-  <a href="https://wave-gamma-two.vercel.app">🚀 Live Demo</a>
-  &nbsp; • &nbsp;
-  <a href="https://github.com/tusharchauhan89/wave">📂 Source Code</a>
+  <a href="https://wave-gamma-two.vercel.app/">
+    🚀 Live Demo
+  </a>
+  &nbsp;&nbsp;•&nbsp;&nbsp;
+  <a href="https://github.com/tusharchauhan89/wave">
+    📂 GitHub Repository
+  </a>
 </p>
 
 ---
 
-## 📸 Preview
+# 🌐 Live Demo
 
-### Home / Music Player
+### 🚀 [Visit WAVE](https://wave-gamma-two.vercel.app/)
 
-> Add your screenshot here as `screenshots/home.png`
-
-![WAVE Home](screenshots/home.png)
-
-### Search & Music Discovery
-
-> Add your screenshot here as `screenshots/search.png`
-
-![WAVE Search](screenshots/search.png)
-
-### Playlist / Library
-
-> Add your screenshot here as `screenshots/playlist.png`
-
-![WAVE Playlist](screenshots/playlist.png)
+WAVE is a full-stack, AI-powered music streaming platform featuring music discovery, playlists, favorites, recently played history, voice-controlled playback, Grove AI, user authentication and premium listening features.
 
 ---
 
-## ✨ About The Project
+# 📸 Screenshots
 
-**WAVE** is a full-stack music streaming web application designed to provide a smooth and modern music discovery and playback experience.
+## 🖥️ Desktop Experience
 
-The project combines a **React + TypeScript frontend** with a **FastAPI backend**, providing a structured full-stack architecture instead of putting all application logic inside the frontend.
+### 🏠 Home
 
-The application focuses on:
+<p align="center">
+  <img src="sceenshots/home-desktop.png" alt="WAVE Desktop Home" width="900"/>
+</p>
 
-* 🎵 Music discovery
-* 🔎 Search
-* ▶️ Music playback
-* 📚 Personal music library
-* ❤️ Favorites
-* 🎧 Playlists
-* 👤 User authentication
-* 🔐 Protected backend APIs
-* 📱 Responsive UI
-* ⚡ Fast frontend interactions
-
-The application is deployed and available online:
-
-**Live Demo:** https://wave-gamma-two.vercel.app
+The WAVE home page provides a modern music discovery interface with quick access to songs, artists and personalized content.
 
 ---
 
-## 🚀 Features
+### 🔎 Music Search
 
-### 🎵 Music Discovery
+<p align="center">
+  <img src="sceenshots/search.png" alt="WAVE Music Search" width="900"/>
+</p>
 
-* Search for songs and artists
-* Browse available music
-* Display song artwork and metadata
-* Quickly start playback
-
-### ▶️ Music Player
-
-* Play / pause songs
-* Previous / next controls
-* Music progress control
-* Track information
-* Persistent player interface
-
-### ❤️ Favorites
-
-Users can save songs to their personal favorites/library for easier access later.
-
-### 🎧 Playlists
-
-Create and manage personal playlists and organize music according to user preferences.
-
-### 🔐 Authentication
-
-The application includes user authentication with protected backend functionality.
-
-Authentication-related functionality is handled through the FastAPI backend with JWT-based authorization.
-
-### 📱 Responsive Interface
-
-The frontend is built with React and designed to provide a modern music-player experience across different screen sizes.
-
-### ⚡ Toast Notifications
-
-User actions provide immediate feedback through toast notifications.
+Search for songs and discover music through a responsive search experience.
 
 ---
 
-## 🛠️ Tech Stack
+### 👤 User Profile
 
-### Frontend
+<p align="center">
+  <img src="sceenshots/user-profile.png" alt="WAVE User Profile" width="900"/>
+</p>
 
-| Technology      | Purpose                        |
-| --------------- | ------------------------------ |
-| React           | UI development                 |
-| TypeScript      | Type safety                    |
-| Vite            | Development & production build |
-| React Router    | Client-side routing            |
-| Axios           | API communication              |
-| Framer Motion   | UI animations                  |
-| Lucide React    | Icons                          |
-| React Hot Toast | Notifications                  |
-
-The frontend uses React 19, TypeScript, Vite, Axios, Framer Motion, Lucide React and React Router.
-
-### Backend
-
-| Technology    | Purpose                     |
-| ------------- | --------------------------- |
-| Python        | Backend development         |
-| FastAPI       | REST API framework          |
-| Uvicorn       | ASGI server                 |
-| Pydantic      | Data validation             |
-| JWT           | Authentication              |
-| Supabase      | Database / backend services |
-| HTTPX         | HTTP requests               |
-| python-dotenv | Environment variables       |
-
-The backend dependency configuration includes FastAPI, Uvicorn, Supabase, Pydantic, JWT libraries and related utilities.
+Users can access their personalized profile and manage their music experience.
 
 ---
 
-## 🏗️ Architecture
+## 📱 Mobile Experience
+
+### 🏠 Mobile Home
+
+<p align="center">
+  <img src="sceenshots/home-mobile.png" alt="WAVE Mobile Home" width="420"/>
+</p>
+
+WAVE provides a responsive interface that adapts to smaller screens while maintaining the core music streaming experience.
+
+---
+
+### 📚 Mobile Library
+
+<p align="center">
+  <img src="sceenshots/library-mobile.png" alt="WAVE Mobile Library" width="420"/>
+</p>
+
+Users can access saved music and their personal library from mobile devices.
+
+---
+
+## 🤖 Grove AI
+
+<p align="center">
+  <img src="sceenshots/nova-ai.png" alt="Grove AI Assistant" width="900"/>
+</p>
+
+**Grove AI** provides an AI-powered conversational interface for music discovery and general chatbot interactions.
+
+---
+
+## 🔐 Authentication
+
+<p align="center">
+  <img src="sceenshots/signup.png" alt="WAVE Sign Up" width="900"/>
+</p>
+
+WAVE provides user authentication for personalized features and protected application functionality.
+
+---
+
+# ✨ Features
+
+## 🎵 Music Discovery
+
+* 🔎 Search for songs and artists
+* 🎶 Discover music through the application
+* 🖼️ Display album artwork and track information
+* ▶️ Quickly start playback
+* 🤖 AI-powered song discovery using Grove AI
+
+---
+
+## ▶️ Music Player
+
+WAVE includes a complete music-player experience with:
+
+* ▶️ Play
+* ⏸️ Pause
+* ⏭️ Next track
+* ⏮️ Previous track
+* 🔊 Volume control
+* 📊 Playback progress
+* 🎵 Track information
+* 🔄 Persistent player interface
+
+---
+
+## 🎤 Voice Music Control
+
+WAVE includes microphone-based voice commands for hands-free interaction with the music player.
+
+Users can perform actions such as:
 
 ```text
-                    ┌──────────────────────┐
-                    │      WAVE USER       │
-                    └──────────┬───────────┘
-                               │
-                               ▼
-                    ┌──────────────────────┐
-                    │   React Frontend     │
-                    │  TypeScript + Vite   │
-                    └──────────┬───────────┘
-                               │
-                         HTTP / REST API
-                               │
-                               ▼
-                    ┌──────────────────────┐
-                    │   FastAPI Backend    │
-                    │      Python          │
-                    └──────────┬───────────┘
-                               │
-              ┌────────────────┼────────────────┐
-              │                │                │
-              ▼                ▼                ▼
-        Authentication     Music APIs       Application
-          / JWT                              Services
-              │
-              ▼
-        ┌───────────────┐
-        │    Supabase   │
-        │    Database   │
-        └───────────────┘
+🔎 Search for a song
+▶️ Play a song
+⏸️ Pause playback
+🔊 Increase volume
+🔉 Decrease volume
+⏭️ Play next song
+⏮️ Play previous song
+```
+
+This allows users to control their music without manually interacting with the player.
+
+---
+
+# 🤖 Grove AI
+
+**Grove AI** is WAVE's integrated AI assistant.
+
+It combines music-related assistance with general conversational chatbot capabilities.
+
+### Grove AI can:
+
+* 🔎 Search for songs using natural language
+* 🎵 Help users discover music
+* 💬 Handle general chatbot conversations
+* 🧠 Understand natural-language requests
+* 🎧 Assist users while listening to music
+* 🎯 Help users find music based on intent
+
+### Example Requests
+
+```text
+"Play some Arijit Singh songs"
+
+"Find relaxing songs for studying"
+
+"Search for workout music"
+
+"Who sings this song?"
+
+"Recommend songs for a road trip"
+
+"Play something energetic"
 ```
 
 ---
 
-## 📁 Project Structure
+# 🕐 Recently Played
+
+WAVE maintains a **Recently Played** history for users.
+
+This allows users to:
+
+* View previously played songs
+* Quickly return to tracks they recently listened to
+* Maintain a personalized listening history
+* Continue discovering music based on their listening activity
+
+---
+
+# ❤️ Favorites
+
+Users can save songs to their personal collection.
+
+Features include:
+
+* ❤️ Add songs to favorites
+* ❌ Remove songs from favorites
+* 📚 Access favorite songs through the library
+
+---
+
+# 📚 Personal Library
+
+Users have a centralized library for their saved music.
+
+The library brings together personalized content such as:
+
+* Favorite songs
+* Playlists
+* Recently played music
+* Saved content
+
+---
+
+# 🎧 Playlists
+
+Users can create and manage playlists to organize their music.
+
+Playlists can be organized around:
+
+* 🎵 Artists
+* 🎼 Genres
+* ❤️ Favorite tracks
+* 🏋️ Activities
+* 😌 Moods
+* 🚗 Personal listening sessions
+
+---
+
+# 👤 User Profiles
+
+Each user has a personalized profile.
+
+User-specific functionality includes:
+
+* Account information
+* Personal library
+* Favorites
+* Playlists
+* Recently played history
+* Premium functionality
+
+---
+
+# 🔐 Authentication & Authorization
+
+WAVE includes user authentication and protected backend functionality.
+
+Authentication is used to protect personalized resources and user-specific features.
+
+The system uses **JWT-based authorization** for protected backend operations.
+
+---
+
+# 💎 Premium User Features
+
+WAVE includes a **Premium user system** based on listening activity.
+
+After the configured listening period, users can access premium functionality designed to provide an enhanced listening experience.
+
+The premium system demonstrates:
+
+* 💎 Premium user status
+* 🕐 Listening-time tracking
+* 🔐 Feature access control
+* 🛡️ Protected premium functionality
+* 🔑 Backend authorization
+
+---
+
+# 📱 Responsive UI
+
+WAVE is designed for both desktop and mobile experiences.
+
+The responsive interface adapts the music-player layout and navigation to different screen sizes.
+
+---
+
+# 🏗️ System Architecture
+
+```text
+                         ┌─────────────────────┐
+                         │       WAVE USER     │
+                         └──────────┬──────────┘
+                                    │
+                                    ▼
+                         ┌─────────────────────┐
+                         │   React Frontend    │
+                         │   TypeScript + Vite │
+                         └──────────┬──────────┘
+                                    │
+                              REST API / HTTP
+                                    │
+                                    ▼
+                         ┌─────────────────────┐
+                         │   FastAPI Backend   │
+                         │       Python        │
+                         └──────────┬──────────┘
+                                    │
+             ┌──────────────────────┼──────────────────────┐
+             │                      │                      │
+             ▼                      ▼                      ▼
+      Authentication          Music Services          Grove AI
+          / JWT
+             │
+             ▼
+       ┌───────────────┐
+       │    Supabase   │
+       │    Database   │
+       └───────────────┘
+```
+
+---
+
+# 🔄 How WAVE Works
+
+### 1. User interacts with the React application
+
+The React frontend handles:
+
+* UI rendering
+* Navigation
+* Music player
+* User interactions
+* Application state
+
+### 2. Frontend communicates with FastAPI
+
+The frontend sends requests to the FastAPI backend through REST APIs.
+
+```text
+User
+  ↓
+React Component
+  ↓
+Axios / API Service
+  ↓
+FastAPI Endpoint
+  ↓
+Business Logic
+  ↓
+Supabase / External Services
+  ↓
+JSON Response
+  ↓
+React UI
+```
+
+### 3. Authentication
+
+Protected requests use JWT-based authentication to determine whether a user can access personalized resources.
+
+### 4. Music & Library
+
+Music-related information is retrieved through the backend/service layer, while user-specific data such as favorites, playlists and recently played content is handled through the application's database.
+
+### 5. AI & Voice Interaction
+
+Grove AI provides conversational music assistance, while microphone-based commands allow users to control playback and search for music through voice.
+
+---
+
+# 🛠️ Tech Stack
+
+## Frontend
+
+| Technology         | Purpose                       |
+| ------------------ | ----------------------------- |
+| ⚛️ React           | UI development                |
+| 📘 TypeScript      | Type-safe development         |
+| ⚡ Vite             | Development and build tooling |
+| 🧭 React Router    | Client-side routing           |
+| 🔗 Axios           | API communication             |
+| 🎬 Framer Motion   | UI animations                 |
+| 🎨 Lucide React    | Icons                         |
+| 🔔 React Hot Toast | Notifications                 |
+
+## Backend
+
+| Technology       | Purpose                       |
+| ---------------- | ----------------------------- |
+| 🐍 Python        | Backend programming           |
+| ⚡ FastAPI        | REST API framework            |
+| 🚀 Uvicorn       | ASGI server                   |
+| 🔐 JWT           | Authentication                |
+| 🗄️ Supabase     | Database and backend services |
+| 📦 Pydantic      | Data validation               |
+| 🌐 HTTPX         | HTTP requests                 |
+| 🔑 python-dotenv | Environment configuration     |
+
+## AI & Voice
+
+| Technology                     | Purpose                            |
+| ------------------------------ | ---------------------------------- |
+| 🤖 Grove AI                    | AI assistant and music discovery   |
+| 🎤 Microphone / Voice Commands | Voice-controlled music interaction |
+| 💬 AI Chatbot                  | Conversational interaction         |
+
+---
+
+# 📁 Project Structure
 
 ```text
 wave/
@@ -190,7 +423,7 @@ wave/
 │   ├── utils/
 │   ├── main.py
 │   ├── requirements.txt
-│   └── .env.example
+│   └── .env
 │
 ├── frontend-react/
 │   ├── public/
@@ -211,92 +444,27 @@ wave/
 │   ├── vite.config.ts
 │   └── tsconfig.json
 │
-├── .gitignore
-├── package.json
-└── README.md
+├── sceenshots/
+│   ├── home-desktop.png
+│   ├── home-mobile.png
+│   ├── home1.png
+│   ├── library-mobile.png
+│   ├── nova-ai.png
+│   ├── search.png
+│   ├── signup.png
+│   └── user-profile.png
+│
+├── README.md
+└── package.json
 ```
 
-The current repository follows this frontend/backend separation, with dedicated API, components, context, hooks, pages, services, styles and types directories in the React application.
+> **Note:** The `sceenshots` directory contains images used only for project documentation and does not affect the application's backend or frontend deployment.
 
 ---
 
-## 🔄 Application Flow
+# ⚙️ Getting Started
 
-### 1. User opens WAVE
-
-The React frontend loads the application through Vite.
-
-### 2. User searches for music
-
-The frontend sends a request to the backend/API layer.
-
-```text
-User
- ↓
-React Search Component
- ↓
-Axios
- ↓
-FastAPI API
- ↓
-Music Service
- ↓
-Response
- ↓
-React UI
-```
-
-### 3. User plays a song
-
-The selected track is passed to the music player and the playback state is updated through the frontend application state.
-
-### 4. User saves a song
-
-```text
-React
- ↓
-FastAPI
- ↓
-Authentication
- ↓
-Supabase
- ↓
-Saved Music
-```
-
-### 5. User accesses protected features
-
-Authentication information is used when communicating with protected backend endpoints.
-
----
-
-## 🔐 Environment Variables
-
-Create the required environment files locally.
-
-### Backend
-
-Create:
-
-```text
-backend/.env
-```
-
-Example:
-
-```env
-SUPABASE_URL=your_supabase_url
-SUPABASE_KEY=your_supabase_key
-JWT_SECRET=your_jwt_secret
-```
-
-> Never commit your real `.env` file or secret keys to GitHub.
-
----
-
-## 💻 Run Locally
-
-### Prerequisites
+## Prerequisites
 
 Make sure you have installed:
 
@@ -304,11 +472,11 @@ Make sure you have installed:
 * npm
 * Python 3.10+
 * Git
-* A Supabase project
+* Supabase account
 
 ---
 
-### 1. Clone the repository
+# 1️⃣ Clone the Repository
 
 ```bash
 git clone https://github.com/tusharchauhan89/wave.git
@@ -318,7 +486,9 @@ cd wave
 
 ---
 
-### 2. Setup the backend
+# 🐍 Backend Setup
+
+Navigate to the backend:
 
 ```bash
 cd backend
@@ -330,10 +500,16 @@ Create a virtual environment:
 python -m venv venv
 ```
 
-Activate it on Windows:
+### Windows
 
 ```bash
 venv\Scripts\activate
+```
+
+### macOS / Linux
+
+```bash
+source venv/bin/activate
 ```
 
 Install dependencies:
@@ -342,25 +518,39 @@ Install dependencies:
 pip install -r requirements.txt
 ```
 
-Create your environment file:
+---
 
-```text
-.env
+# 🔐 Environment Variables
+
+Create a `.env` file inside the backend directory.
+
+```env
+SUPABASE_URL=your_supabase_url
+SUPABASE_KEY=your_supabase_key
+JWT_SECRET=your_jwt_secret
 ```
 
-Then start FastAPI:
+> ⚠️ Never commit real API keys, database credentials or secrets to GitHub.
+
+For production deployments, configure environment variables directly through your hosting platform.
+
+---
+
+# ▶️ Start the Backend
+
+Run:
 
 ```bash
 uvicorn main:app --reload
 ```
 
-Backend will normally be available at:
+The backend will be available at:
 
 ```text
 http://127.0.0.1:8000
 ```
 
-FastAPI also provides interactive API documentation at:
+FastAPI interactive documentation:
 
 ```text
 http://127.0.0.1:8000/docs
@@ -368,9 +558,9 @@ http://127.0.0.1:8000/docs
 
 ---
 
-### 3. Setup the frontend
+# ⚛️ Frontend Setup
 
-Open another terminal:
+Open another terminal and navigate to:
 
 ```bash
 cd frontend-react
@@ -388,27 +578,13 @@ Start the development server:
 npm run dev
 ```
 
-The Vite development server will provide the local frontend URL in the terminal.
+Vite will display the local development URL in the terminal.
 
 ---
 
-## 🌐 Deployment
+# 🧪 Production Build
 
-The frontend is deployed using **Vercel**.
-
-### Live Application
-
-🚀 **https://wave-gamma-two.vercel.app**
-
-The source repository is available here:
-
-📂 **https://github.com/tusharchauhan89/wave**
-
----
-
-## 🧪 Production Build
-
-Build the React application:
+Build the frontend:
 
 ```bash
 npm run build
@@ -422,67 +598,87 @@ npm run preview
 
 ---
 
-## 🎯 Key Learning Outcomes
+# 🚀 Deployment
 
-This project helped me work with:
+## Frontend
 
-* Full-stack application architecture
+The WAVE frontend is deployed using **Vercel**.
+
+### 🌐 Live Application
+
+**https://wave-gamma-two.vercel.app/**
+
+## Backend
+
+The FastAPI backend can be deployed separately using a backend hosting platform such as Render.
+
+The frontend communicates with the deployed backend through API endpoints configured using environment variables.
+
+---
+
+# 🎯 What I Learned
+
+Building WAVE provided practical experience with:
+
+* Full-stack web application architecture
 * React component development
 * TypeScript
-* REST API integration
-* FastAPI backend development
+* REST API development
+* FastAPI
+* Python backend development
 * Authentication and authorization
 * JWT
 * Supabase
-* API error handling
+* API integration
 * Frontend state management
-* Routing
-* Responsive UI development
-* Deployment with Vercel
-* Git and GitHub workflows
+* Responsive UI design
+* AI integration
+* Voice-controlled application features
+* Listening-history management
+* Premium feature access control
+* Error handling
+* Git & GitHub
+* Vercel deployment
+* Backend deployment
 
 ---
 
-## 🔮 Future Improvements
+# 🔮 Future Improvements
 
-Some planned improvements include:
+The core music streaming, AI, voice-control, listening-history and premium functionality is already implemented.
 
-* [ ] Advanced music recommendations
-* [ ] Better playlist management
-* [ ] Queue management
-* [ ] Shuffle and repeat modes
-* [ ] Recently played history
-* [ ] Improved mobile UI
-* [ ] Audio quality selection
-* [ ] More detailed artist and album pages
-* [ ] Social sharing
-* [ ] Improved caching
+Future development will focus on improving and scaling the existing platform.
+
+* [ ] More personalized AI music recommendations
+* [ ] Improved natural-language understanding for Grove AI
+* [ ] More advanced listening-based recommendations
+* [ ] Improved voice recognition accuracy
+* [ ] Enhanced artist and album pages
+* [ ] Better streaming performance and caching
 * [ ] Progressive Web App support
+* [ ] Additional premium plans and subscription options
+* [ ] Enhanced listening analytics
+* [ ] Further mobile and accessibility improvements
 
 ---
 
-## 🧑‍💻 Author
+# 👨‍💻 Author
 
-### Tushar Chauhan
+## Tushar Chauhan
 
-B.Tech Computer Science & Engineering
+**B.Tech — Computer Science & Engineering**
 
-📍 Himachal Pradesh, India
+### Connect with me
 
-GitHub:
-https://github.com/tusharchauhan89
-
----
-
-## ⭐ Support
-
-If you found this project interesting, consider giving the repository a ⭐ on GitHub.
+* 🐙 GitHub: [@tusharchauhan89](https://github.com/tusharchauhan89)
+* 📂 Project: [WAVE Repository](https://github.com/tusharchauhan89/wave)
+* 🚀 Live Demo: [WAVE](https://wave-gamma-two.vercel.app/)
 
 ---
 
-## 📄 License
+# ⭐ Show Your Support
 
-This project is created for educational and portfolio purposes.
+If you like this project, consider giving the repository a ⭐ on GitHub.
 
 ---
 
