@@ -35,7 +35,7 @@ WAVE includes a responsive interface designed for desktop and mobile devices.
 ## 🏠 Home — Desktop
 
 <p align="center">
-  <img src="sceenshots/home-desktop.png" alt="WAVE Desktop Home" width="1200"/>
+  <img src="sceenshots/home1.png" alt="WAVE Music Interface" width="1200"/>
 </p>
 
 The main WAVE dashboard provides access to music discovery, navigation, playback and personalized content.
@@ -44,9 +44,11 @@ The main WAVE dashboard provides access to music discovery, navigation, playback
 
 ## 🎵 Music Interface
 
+
 <p align="center">
-  <img src="sceenshots/home1.png" alt="WAVE Music Interface" width="1200"/>
+  <img src="sceenshots/home-desktop.png" alt="WAVE Desktop Home" width="1200"/>
 </p>
+
 
 The main music interface brings together music discovery and playback functionality in a single experience.
 
@@ -682,15 +684,16 @@ Future development will focus on improving and scaling the existing platform.
 
 # 👨‍💻 Author
 
-## Tushar Chauhan
+## Tushar Chauhan ## Sahil Chauhan
 
 **B.Tech — Computer Science & Engineering**
 
 ### Connect with me
 
 * 🐙 GitHub: [@tusharchauhan89](https://github.com/tusharchauhan89)
+* * 🐙 GitHub: [@iksahil-hub](https://github.com/iksahil-hub)
 * 📂 Project: [WAVE Repository](https://github.com/tusharchauhan89/wave)
-* 🚀 Live Demo: [WAVE](https://wave-gamma-two.vercel.app/singnup)
+* 🚀 Live Demo: [WAVE](https://wave-gamma-two.vercel.app)
 
 ---
 
