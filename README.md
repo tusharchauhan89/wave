@@ -232,15 +232,16 @@ JWT_SECRET=your_jwt_secret
 
 # 👨‍💻 Team
 
-### Tushar Chauhan,Sahil Chauhan
-
+### Tushar Chauhan
 B.Tech — Computer Science & Engineering
 
 🐙 [GitHub](https://github.com/tusharchauhan89)
 
 ### Sahil Chauhan
+B.Tech — Computer Science & Engineering
 
 🐙 [GitHub](https://github.com/iksahil-hub)
+
 
 ---
 
