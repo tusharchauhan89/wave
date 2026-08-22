@@ -13,98 +13,104 @@
 </p>
 
 <p align="center">
-  <a href="https://wave-gamma-two.vercel.app/">
-    🚀 Live Demo
-  </a>
+  🚀 <a href="https://wave-gamma-two.vercel.app/">Live Demo</a>
   &nbsp;&nbsp;•&nbsp;&nbsp;
-  <a href="https://github.com/tusharchauhan89/wave">
-    📂 GitHub Repository
-  </a>
+  📂 <a href="https://github.com/tusharchauhan89/wave">GitHub Repository</a>
 </p>
 
 ---
 
 # 🌐 Live Demo
 
-### 🚀 [Visit WAVE](https://wave-gamma-two.vercel.app/)
+## 🚀 [Visit WAVE](https://wave-gamma-two.vercel.app/)
 
-WAVE is a full-stack, AI-powered music streaming platform featuring music discovery, playlists, favorites, recently played history, voice-controlled playback, Grove AI, user authentication and premium listening features.
-
----
-
-# 📸 Screenshots
-
-## 🖥️ Desktop Experience
-
-### 🏠 Home
-
-<p align="center">
-  <img src="sceenshots/home-desktop.png" alt="WAVE Desktop Home" width="900"/>
-</p>
-
-The WAVE home page provides a modern music discovery interface with quick access to songs, artists and personalized content.
+WAVE is a full-stack, AI-powered music streaming platform featuring music discovery, playlists, favorites, recently played history, voice-controlled playback, Grove AI, user authentication, user profiles and premium listening features.
 
 ---
 
-### 🔎 Music Search
+# 📸 Application Screenshots
+
+WAVE includes a responsive interface designed for desktop and mobile devices.
+
+## 🏠 Home — Desktop
 
 <p align="center">
-  <img src="sceenshots/search.png" alt="WAVE Music Search" width="900"/>
+  <img src="sceenshots/home-desktop.png" alt="WAVE Desktop Home" width="1200"/>
 </p>
 
-Search for songs and discover music through a responsive search experience.
+The main WAVE dashboard provides access to music discovery, navigation, playback and personalized content.
 
 ---
 
-### 👤 User Profile
+## 🎵 Music Interface
 
 <p align="center">
-  <img src="sceenshots/user-profile.png" alt="WAVE User Profile" width="900"/>
+  <img src="sceenshots/home1.png" alt="WAVE Music Interface" width="1200"/>
 </p>
 
-Users can access their personalized profile and manage their music experience.
+The main music interface brings together music discovery and playback functionality in a single experience.
 
 ---
 
-## 📱 Mobile Experience
-
-### 🏠 Mobile Home
+## 🔎 Music Search
 
 <p align="center">
-  <img src="sceenshots/home-mobile.png" alt="WAVE Mobile Home" width="420"/>
+  <img src="sceenshots/search.png" alt="WAVE Music Search" width="1200"/>
 </p>
 
-WAVE provides a responsive interface that adapts to smaller screens while maintaining the core music streaming experience.
+Users can search for songs and discover music through the integrated search experience.
 
 ---
 
-### 📚 Mobile Library
+## 👤 User Profile
 
 <p align="center">
-  <img src="sceenshots/library-mobile.png" alt="WAVE Mobile Library" width="420"/>
+  <img src="sceenshots/user-profile.png" alt="WAVE User Profile" width="1200"/>
 </p>
 
-Users can access saved music and their personal library from mobile devices.
+The user profile provides access to personalized account information and music-related features.
+
+---
+
+## 📚 Music Library — Mobile
+
+<p align="center">
+  <img src="sceenshots/library-mobile.png" alt="WAVE Mobile Library" width="700"/>
+</p>
+
+The personal library provides access to saved and personalized music from mobile devices.
+
+---
+
+## 📱 Home — Mobile
+
+> **Note:** Rename `home-mobile..png` to `home-mobile.png` if you haven't already.
+
+<p align="center">
+  <img src="sceenshots/home-mobile.png" alt="WAVE Mobile Home" width="700"/>
+</p>
+
+The responsive mobile interface adapts the WAVE experience to smaller screens.
 
 ---
 
 ## 🤖 Grove AI
 
 <p align="center">
-  <img src="sceenshots/nova-ai.png" alt="Grove AI Assistant" width="900"/>
+  <img src="sceenshots/nova-ai.png" alt="WAVE Grove AI" width="1200"/>
 </p>
 
-**Grove AI** provides an AI-powered conversational interface for music discovery and general chatbot interactions.
+**Grove AI** provides an integrated AI assistant for music discovery and conversational interaction.
 
 ---
 
-## 🔐 Authentication
+## 🔐 User Authentication
 
 <p align="center">
-  <img src="sceenshots/signup.png" alt="WAVE Sign Up" width="900"/>
+  <img src="sceenshots/signup.png" alt="WAVE Sign Up" width="1200"/>
 </p>
 
-WAVE provides user authentication for personalized features and protected application functionality.
+The authentication interface allows users to create accounts and access personalized WAVE functionality.
 
 ---
 
@@ -116,50 +122,59 @@ WAVE provides user authentication for personalized features and protected applic
 * 🎶 Discover music through the application
 * 🖼️ Display album artwork and track information
 * ▶️ Quickly start playback
-* 🤖 AI-powered song discovery using Grove AI
+* 🤖 AI-powered music discovery through Grove AI
 
 ---
 
 ## ▶️ Music Player
 
-WAVE includes a complete music-player experience with:
+WAVE includes a complete music-player experience.
+
+### Playback Controls
 
 * ▶️ Play
 * ⏸️ Pause
 * ⏭️ Next track
 * ⏮️ Previous track
-* 🔊 Volume control
+* 🔊 Volume up
+* 🔉 Volume down
 * 📊 Playback progress
 * 🎵 Track information
-* 🔄 Persistent player interface
+* 🔄 Continuous playback
 
 ---
 
-## 🎤 Voice Music Control
+# 🎤 Voice-Controlled Music
 
-WAVE includes microphone-based voice commands for hands-free interaction with the music player.
+WAVE includes microphone-based voice commands for hands-free music interaction.
 
-Users can perform actions such as:
+Users can use voice commands to:
 
 ```text
 🔎 Search for a song
-▶️ Play a song
-⏸️ Pause playback
+
+▶️ Play music
+
+⏸️ Pause music
+
 🔊 Increase volume
+
 🔉 Decrease volume
+
 ⏭️ Play next song
+
 ⏮️ Play previous song
 ```
 
-This allows users to control their music without manually interacting with the player.
+This allows users to control the music player without manually interacting with the interface.
 
 ---
 
 # 🤖 Grove AI
 
-**Grove AI** is WAVE's integrated AI assistant.
+**Grove AI** is WAVE's integrated AI-powered assistant.
 
-It combines music-related assistance with general conversational chatbot capabilities.
+It combines music-related assistance with general chatbot functionality.
 
 ### Grove AI can:
 
@@ -168,7 +183,7 @@ It combines music-related assistance with general conversational chatbot capabil
 * 💬 Handle general chatbot conversations
 * 🧠 Understand natural-language requests
 * 🎧 Assist users while listening to music
-* 🎯 Help users find music based on intent
+* 🎯 Help users find music based on their intent
 
 ### Example Requests
 
@@ -192,12 +207,14 @@ It combines music-related assistance with general conversational chatbot capabil
 
 WAVE maintains a **Recently Played** history for users.
 
-This allows users to:
+Users can:
 
-* View previously played songs
-* Quickly return to tracks they recently listened to
-* Maintain a personalized listening history
-* Continue discovering music based on their listening activity
+* View recently played songs
+* Quickly return to previously played tracks
+* Continue listening to previous music
+* Build a personalized listening history
+
+Recently played music also contributes to the overall personalized listening experience.
 
 ---
 
@@ -215,14 +232,14 @@ Features include:
 
 # 📚 Personal Library
 
-Users have a centralized library for their saved music.
+Users have a centralized personal library for their music.
 
-The library brings together personalized content such as:
+The library can contain:
 
-* Favorite songs
-* Playlists
-* Recently played music
-* Saved content
+* ❤️ Favorite songs
+* 🎧 Playlists
+* 🕐 Recently played music
+* 🎵 Saved music
 
 ---
 
@@ -258,17 +275,17 @@ User-specific functionality includes:
 
 # 🔐 Authentication & Authorization
 
-WAVE includes user authentication and protected backend functionality.
+WAVE provides user authentication and protected backend functionality.
 
 Authentication is used to protect personalized resources and user-specific features.
 
-The system uses **JWT-based authorization** for protected backend operations.
+The backend uses **JWT-based authorization** for protected operations.
 
 ---
 
 # 💎 Premium User Features
 
-WAVE includes a **Premium user system** based on listening activity.
+WAVE includes a **Premium user system based on listening activity**.
 
 After the configured listening period, users can access premium functionality designed to provide an enhanced listening experience.
 
@@ -282,11 +299,11 @@ The premium system demonstrates:
 
 ---
 
-# 📱 Responsive UI
+# 📱 Responsive Design
 
 WAVE is designed for both desktop and mobile experiences.
 
-The responsive interface adapts the music-player layout and navigation to different screen sizes.
+The interface adapts to different screen sizes while maintaining the core music streaming experience.
 
 ---
 
@@ -311,24 +328,24 @@ The responsive interface adapts the music-player layout and navigation to differ
                          │       Python        │
                          └──────────┬──────────┘
                                     │
-             ┌──────────────────────┼──────────────────────┐
-             │                      │                      │
-             ▼                      ▼                      ▼
-      Authentication          Music Services          Grove AI
-          / JWT
-             │
-             ▼
-       ┌───────────────┐
-       │    Supabase   │
-       │    Database   │
-       └───────────────┘
+              ┌─────────────────────┼─────────────────────┐
+              │                     │                     │
+              ▼                     ▼                     ▼
+       Authentication         Music Services          Grove AI
+           / JWT
+              │
+              ▼
+       ┌─────────────────┐
+       │    Supabase     │
+       │     Database    │
+       └─────────────────┘
 ```
 
 ---
 
-# 🔄 How WAVE Works
+# 🔄 Application Flow
 
-### 1. User interacts with the React application
+## 1. User Interaction
 
 The React frontend handles:
 
@@ -337,10 +354,11 @@ The React frontend handles:
 * Music player
 * User interactions
 * Application state
+* Voice interaction
 
-### 2. Frontend communicates with FastAPI
+## 2. API Communication
 
-The frontend sends requests to the FastAPI backend through REST APIs.
+The frontend communicates with the FastAPI backend through REST APIs.
 
 ```text
 User
@@ -360,17 +378,17 @@ JSON Response
 React UI
 ```
 
-### 3. Authentication
+## 3. Authentication
 
 Protected requests use JWT-based authentication to determine whether a user can access personalized resources.
 
-### 4. Music & Library
+## 4. Music & Library
 
-Music-related information is retrieved through the backend/service layer, while user-specific data such as favorites, playlists and recently played content is handled through the application's database.
+Music-related information is retrieved through the backend/service layer, while user-specific data such as favorites, playlists and recently played content is managed through the application's database.
 
-### 5. AI & Voice Interaction
+## 5. AI & Voice Interaction
 
-Grove AI provides conversational music assistance, while microphone-based commands allow users to control playback and search for music through voice.
+Grove AI provides conversational and music-related assistance, while microphone-based commands allow users to search and control playback through voice.
 
 ---
 
@@ -458,7 +476,7 @@ wave/
 └── package.json
 ```
 
-> **Note:** The `sceenshots` directory contains images used only for project documentation and does not affect the application's backend or frontend deployment.
+> The `sceenshots` directory contains documentation images used by this README and does not affect the application's backend or frontend deployment.
 
 ---
 
@@ -522,7 +540,7 @@ pip install -r requirements.txt
 
 # 🔐 Environment Variables
 
-Create a `.env` file inside the backend directory.
+Create a `.env` file inside the `backend` directory.
 
 ```env
 SUPABASE_URL=your_supabase_url
@@ -532,7 +550,7 @@ JWT_SECRET=your_jwt_secret
 
 > ⚠️ Never commit real API keys, database credentials or secrets to GitHub.
 
-For production deployments, configure environment variables directly through your hosting platform.
+For production deployments, configure environment variables directly through the hosting platform.
 
 ---
 
@@ -560,7 +578,7 @@ http://127.0.0.1:8000/docs
 
 # ⚛️ Frontend Setup
 
-Open another terminal and navigate to:
+Open another terminal:
 
 ```bash
 cd frontend-react
@@ -606,7 +624,7 @@ The WAVE frontend is deployed using **Vercel**.
 
 ### 🌐 Live Application
 
-**https://wave-gamma-two.vercel.app/**
+https://wave-gamma-two.vercel.app/
 
 ## Backend
 
@@ -672,7 +690,7 @@ Future development will focus on improving and scaling the existing platform.
 
 * 🐙 GitHub: [@tusharchauhan89](https://github.com/tusharchauhan89)
 * 📂 Project: [WAVE Repository](https://github.com/tusharchauhan89/wave)
-* 🚀 Live Demo: [WAVE](https://wave-gamma-two.vercel.app/)
+* 🚀 Live Demo: [WAVE](https://wave-gamma-two.vercel.app/singnup)
 
 ---
 
