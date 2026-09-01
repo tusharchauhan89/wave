@@ -1,4 +1,4 @@
-# 🎵 WAVE
+# 🎵 GROVE 
 
 ### AI-Powered Music Streaming Platform
 
