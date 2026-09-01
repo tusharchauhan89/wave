@@ -238,7 +238,7 @@ B.Tech — Computer Science & Engineering
 🐙 [GitHub](https://github.com/tusharchauhan89)
 
 ### Sahil Chauhan
-B.Tech — Computer Science & Engineering
+B.Tech — Information Technology
 
 🐙 [GitHub](https://github.com/iksahil-hub)
 
